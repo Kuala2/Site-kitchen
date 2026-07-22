@@ -5,3 +5,43 @@
 @media print{.header,footer,.stepNav,.resultActions,.configPreview>p,.steps,.demoLine{display:none!important}@page{size:A4;margin:15mm}body{background:white}.configurator{display:block}.configPreview{display:block;position:static;height:auto;background:white;color:black;padding:0}.configPreview:before{content:'СЛОЙ 52 - демонстрационный расчёт';font:600 20pt var(--display)}.configPreview .diagram{max-height:85mm;margin:10mm 0}.configPanel{padding:0;max-width:none}.stepPane:not(.result){display:none}.result{display:block}.notice{border:1px solid #333}.price strong{font-size:26pt}}
 html,body{overflow-x:clip}.pageHead{grid-template-columns:minmax(0,.6fr) minmax(0,1.5fr) minmax(0,1fr)}.pageHead h1{overflow-wrap:anywhere}.process>*{min-width:0}.process img{max-width:100%}.materialStrip{overflow:hidden}@media(max-width:900px){.process{grid-template-columns:minmax(0,1fr)}}@media(max-width:520px){.texturesRail{margin-right:0;max-width:100%;min-width:0}}
 @media print{@page{size:A4;margin:10mm}.skip{display:none!important}.configPreview:before{font-size:16pt}.configPreview .diagram{max-height:58mm;margin:5mm 0}.configPanel{padding:0}.stepPane h1{font-size:27pt;margin:2mm 0 4mm}.stepPane>.eyebrow{font-size:8pt;margin-bottom:1mm}.result dl{margin:0}.result dl div{padding:2mm 0}.result dt{font-size:7pt}.result dd{font-size:10pt}.price{margin:4mm 0;padding:3mm 0}.price strong{font-size:23pt}.result>p{font-size:9pt;line-height:1.3;margin:2mm 0}.result .notice{padding:3mm;margin-top:3mm}}
+
+/* Editorial image and plan refinements */
+.heroImage img,.feature img,.projectImage img,.galleryButton img{filter:saturate(.88) contrast(.97)}
+.railHint{display:none;color:var(--olive);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
+.texturesRail{grid-template-columns:repeat(7,minmax(0,1fr));scrollbar-color:var(--olive) transparent;scrollbar-width:thin}
+.texturesRail article{min-width:0}
+.diagram{background:#eee9df;border-color:rgba(32,33,29,.22)}
+.configPreview .diagram{background:#eee9df}
+.storyGallery{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;align-items:end}
+.storyGallery figure{margin:0}
+.storyGallery figure>div{position:relative;height:560px;overflow:hidden;background:#ddd8ce}
+.storyGallery figure:nth-child(2)>div{height:430px}
+.storyGallery img{object-fit:cover;filter:saturate(.88) contrast(.97)}
+.storyGallery figcaption{border-top:1px solid var(--line);padding-top:10px;margin-top:10px;font-size:.82rem}
+.galleryNote{font-size:.8rem;color:#66645c;max-width:680px;margin:18px 0 0}
+.lightbox p span{color:#cfcbbf;margin-right:12px}
+.materialsPage .pageHead{grid-template-columns:.5fr 1.8fr .9fr}
+.materialsPage .pageHead h1{font-size:clamp(3.5rem,6.3vw,6.7rem);overflow-wrap:normal;hyphens:none}
+
+@media(max-width:900px){
+  .railHint{display:block;margin:0 0 14px}
+  .texturesRail{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-right:-20px;padding-right:20vw}
+  .texturesRail article{flex:0 0 min(64vw,250px);scroll-snap-align:start}
+  .storyGallery{grid-template-columns:1fr 1fr}
+  .storyGallery figure>div,.storyGallery figure:nth-child(2)>div{height:52vw}
+  .materialsPage .pageHead{grid-template-columns:1fr}
+  .materialsPage .pageHead h1{font-size:clamp(3.4rem,11vw,5.8rem)}
+}
+
+@media(max-width:520px){
+  .processIntro img{display:none}
+  .process ol{margin-top:8px}
+  .processImage{height:110vw;object-fit:cover;object-position:center}
+  .texturesRail{margin-right:-16px;padding-right:26vw}
+  .texturesRail article{flex-basis:72vw}
+  .storyGallery{grid-template-columns:1fr;gap:34px}
+  .storyGallery figure>div,.storyGallery figure:nth-child(2)>div{height:105vw}
+  .galleryNote{margin-bottom:25px}
+  .lightbox p{font-size:.8rem;padding:0 40px}
+}
