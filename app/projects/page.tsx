@@ -1,0 +1,3 @@
+import type {Metadata} from 'next';import {Suspense} from 'react';import {ProjectGrid} from '@/components/ProjectGrid';
+export const metadata:Metadata={title:'Концепты кухонь',description:'Шесть демонстрационных концептов кухонь с разными планировками и материалами.',alternates:{canonical:'/projects'}};
+export default function Projects(){return <div className="page section"><div className="pageHead"><p className="eyebrow">Не реализованные объекты</p><h1>Демонстрационные концепты кухонь</h1><p>Каталог показывает разные задачи планировки. Фотографии не заявляют сотрудничество с реальным производителем.</p></div><Suspense><ProjectGrid/></Suspense></div>}

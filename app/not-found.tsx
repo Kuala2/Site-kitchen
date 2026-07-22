@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function NotFound(){return <div className="notFound"><p className="eyebrow">404</p><h1>Такой страницы нет</h1><p>Возможно, адрес изменился. Каталог концептов и конфигуратор доступны из основной навигации.</p><Link className="button" href="/">На главную</Link></div>}

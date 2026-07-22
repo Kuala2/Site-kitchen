@@ -1,0 +1,1 @@
+import type {MetadataRoute} from 'next';import {siteConfig} from '@/data/site';export default function robots():MetadataRoute.Robots{return {rules:siteConfig.demoMode?{userAgent:'*',disallow:'/'}:{userAgent:'*',allow:'/'},sitemap:`${siteConfig.domain}/sitemap.xml`}}

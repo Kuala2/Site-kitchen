@@ -1,0 +1,2 @@
+export const priceMatrix={basePerMeter:[64000,82000],layout:{straight:1,corner:1.12,u:1.22,island:1.28},facade:{paint:1,'light-veneer':1.12,'dark-veneer':1.18,frame:1.16},top:{compact:1,stone:1.18,quartz:1.3},options:{uppers:55000,columns:70000,island:120000,lights:30000,drawers:48000,delivery:18000,installation:65000},roundTo:10000} as const;
+export const dimensionRules={a:{min:1600,max:6000},b:{min:1000,max:4500},c:{min:1000,max:4500},islandLength:{min:1200,max:3000}} as const;

@@ -1,0 +1,26 @@
+# Dependencies and Next.js output
+node_modules/
+.next/
+out/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Test and audit artifacts
+audit/
+tmp/
+test-results/
+playwright-report/
+coverage/
+
+# Local runtime logs
+*.log
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.agents/
