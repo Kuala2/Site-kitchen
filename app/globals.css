@@ -6,6 +6,34 @@
 html,body{overflow-x:clip}.pageHead{grid-template-columns:minmax(0,.6fr) minmax(0,1.5fr) minmax(0,1fr)}.pageHead h1{overflow-wrap:anywhere}.process>*{min-width:0}.process img{max-width:100%}.materialStrip{overflow:hidden}@media(max-width:900px){.process{grid-template-columns:minmax(0,1fr)}}@media(max-width:520px){.texturesRail{margin-right:0;max-width:100%;min-width:0}}
 @media print{@page{size:A4;margin:10mm}.skip{display:none!important}.configPreview:before{font-size:16pt}.configPreview .diagram{max-height:58mm;margin:5mm 0}.configPanel{padding:0}.stepPane h1{font-size:27pt;margin:2mm 0 4mm}.stepPane>.eyebrow{font-size:8pt;margin-bottom:1mm}.result dl{margin:0}.result dl div{padding:2mm 0}.result dt{font-size:7pt}.result dd{font-size:10pt}.price{margin:4mm 0;padding:3mm 0}.price strong{font-size:23pt}.result>p{font-size:9pt;line-height:1.3;margin:2mm 0}.result .notice{padding:3mm;margin-top:3mm}}
 
+/* Editorial mastheads: content stays visible before the long-form sections. */
+.pageHead{grid-template-columns:150px minmax(0,1.5fr) minmax(240px,.7fr);gap:clamp(24px,4vw,70px);align-items:start;margin-bottom:68px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+.pageHead h1{font-size:clamp(3.15rem,5.2vw,5.9rem);line-height:1.02;margin:0;max-width:15ch}
+.pageLead{font-size:1.08rem;line-height:1.5;max-width:52ch;margin:26px 0 0}
+.pageHeadVisual figure{position:relative;height:260px;margin:0;overflow:hidden;background:#ddd}
+.pageHeadVisual figure img{object-fit:cover}
+.pageHeadVisual figcaption{position:absolute;left:0;bottom:0;margin:0;padding:9px 12px;background:var(--paper);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
+.processIndex{list-style:none;padding:0;margin:0;border-top:1px solid var(--line)}
+.processIndex li{padding:10px 0;border-bottom:1px solid var(--line);font-size:.82rem}
+
+@media(max-width:900px){
+  .pageHead{grid-template-columns:1fr;margin-bottom:46px;padding-bottom:28px;gap:18px}
+  .pageHead h1{font-size:clamp(2.8rem,8.5vw,4.5rem);max-width:12ch}
+  .pageLead{margin-top:18px;font-size:1rem}
+  .pageHeadVisual figure{height:min(54vw,340px);max-width:560px}
+  .processIndex{max-width:560px;display:grid;grid-template-columns:1fr 1fr}
+  .processIndex li:nth-child(odd){padding-right:12px}
+}
+
+@media(max-width:520px){
+  .pageHead{gap:14px;margin-bottom:34px;padding-bottom:22px}
+  .pageHead h1{font-size:clamp(2.45rem,11.5vw,3.65rem);line-height:1.03;max-width:11ch}
+  .pageLead{margin:10px 0 0;font-size:.98rem}
+  .pageHeadVisual figure{height:66vw;width:100%;max-width:none}
+  .processIndex{grid-template-columns:1fr;font-size:.8rem}
+  .processIndex li{padding:9px 0}
+}
+
 /* Editorial image and plan refinements */
 .heroImage img,.feature img,.projectImage img,.galleryButton img{filter:saturate(.88) contrast(.97)}
 .railHint{display:none;color:var(--olive);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
