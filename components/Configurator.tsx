@@ -30,6 +30,6 @@ export function Configurator(){
   </div>
 }
 
-function money(v:number){return new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(v)}
+function money(v:number){return v>=1_000_000?`${(v/1_000_000).toFixed(1).replace('.',',')} млн ₽`:`${Math.round(v/10_000)*10} тыс. ₽`}
 function Dimension({id,label,value,error,set}:{id:string;label:string;value:number;error?:string;set:(v:number)=>void}){return <label htmlFor={id}>{label}<span className="inputUnit"><input id={id} type="number" value={Number.isNaN(value)?'':value} onChange={e=>set(e.target.valueAsNumber)} aria-invalid={!!error} aria-describedby={error?`${id}-error`:undefined}/><span>мм</span></span>{error&&<small className="error" id={`${id}-error`}>{error}</small>}</label>}
 function LayoutIcon({type}:{type:Layout}){return <svg viewBox="0 0 72 48" aria-hidden="true"><path d="M8 8h56v10H8z"/>{type!=='straight'&&<path d="M8 18h10v24H8z"/>}{type==='u'&&<path d="M54 18h10v24H54z"/>}{type==='island'&&<path d="M26 32h28v9H26z"/>}</svg>}
