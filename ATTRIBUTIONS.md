@@ -17,3 +17,16 @@
 | Aleksandra Dementeva | Unsplash | https://unsplash.com/photos/modern-kitchen-sink-with-wooden-cabinets-and-white-cabinets-ksqPBGn55_0 | public/images/editorial-12.jpg |
 | Caroline Badran | Unsplash | https://unsplash.com/photos/modern-dark-kitchen-with-wood-accents-UBoDgr8Y0YA | public/images/editorial-13.jpg |
 | Quintin Gellar | Pexels | https://www.pexels.com/photo/full-length-of-worker-working-313773/ | public/images/workshop.jpg |
+
+## Сгенерированные материальные референсы
+
+Пять второстепенных материальных референсов созданы с помощью OpenAI ImageGen для демонстрационного интерфейса. Они не являются фотографиями реализованных объектов и отмечены как сгенерированные в подписях галереи.
+
+| Файл | Назначение |
+|---|---|
+| public/images/reference-olive-generated-a.png | Оливковый фасад и кварцевая кромка |
+| public/images/reference-olive-generated-b.png | Оливковые ящики, ручки и открытая полка |
+| public/images/reference-ash-generated.png | Светлый ясенный фасад у окна |
+| public/images/reference-graphite-generated-a.png | Графитовая ниша, камень и подсветка |
+| public/images/reference-graphite-generated-b.png | Тёмный фасад и светлая столешница |
+| public/images/reference-walnut-generated.png | Ореховый фасад и светлая столешница |
