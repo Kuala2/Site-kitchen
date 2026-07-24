@@ -36,6 +36,65 @@ html,body{overflow-x:clip}.pageHead{grid-template-columns:minmax(0,.6fr) minmax(
 
 /* Editorial image and plan refinements */
 .heroImage img,.feature img,.projectImage img,.galleryButton img{filter:saturate(.88) contrast(.97)}
+
+/* Final composition pass: keep the editorial hero within the first desktop viewport. */
+.hero{min-height:clamp(650px,78vh,780px)}
+.hero h1{font-size:clamp(3.7rem,6.5vw,6.9rem);max-width:9.5ch}
+.heroImage{min-height:520px}
+
+.selectedConfiguration,.excludedConfiguration{border-top:1px solid var(--line);padding:20px 0 4px;margin-top:26px}
+.selectedConfiguration .eyebrow,.excludedConfiguration .eyebrow{margin-bottom:10px}
+.selectedConfiguration ul,.excludedConfiguration ul{margin:0;padding-left:1.2rem;display:grid;gap:4px}
+.excludedConfiguration{color:#53564d}
+.summaryOptionList{margin:0;padding-left:1.1rem;display:grid;gap:3px}
+
+/* Material laboratory: two saved combinations are comparable without a second page. */
+.materialsExplorer.materialLab{grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr);gap:32px 5vw;align-items:start}
+.materialLabIntro{grid-column:1/-1;display:grid;grid-template-columns:.7fr 1.25fr 1fr;gap:4vw;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:22px}
+.materialLabIntro h2{font-size:clamp(2.4rem,4.4vw,4.6rem);margin:0}
+.materialLabIntro p:last-child{margin:0}
+.materialLabPreviews{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.materialLabPreview{background:var(--surface);border:1px solid var(--line);padding:14px}
+.materialLabPreview .eyebrow{margin-bottom:8px}
+.materialLabPreview svg{display:block;width:100%;background:#e8e2d8}
+.materialLabPreview dl{margin:13px 0 0;display:grid;grid-template-columns:1fr 1fr}
+.materialLabPreview dl div{border-top:1px solid var(--line);padding:7px 6px 0 0}
+.materialLabPreview dl div:last-child{grid-column:1/-1}
+.materialLabPreview dt{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}
+.materialLabPreview dd{margin:2px 0 0;font-size:.9rem}
+.materialLab .materialControls{border-left:1px solid var(--line);padding-left:clamp(18px,3vw,42px)}
+.materialLab .materialControls fieldset:first-child{padding-top:0}
+.materialSaveActions,.materialUseActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.materialUseActions{margin-top:8px}
+.previewTabs{display:none}
+
+.projectPage--corner .diagramSection{background:var(--surface);padding:32px!important;margin:0 -32px}
+.projectPage--corner .storyGallery{margin-top:32px}
+
+@media(max-width:900px){
+  .materialsExplorer.materialLab{grid-template-columns:1fr}
+  .materialLabIntro{grid-template-columns:1fr;gap:8px}
+  .materialLab .materialControls{border-left:0;padding-left:0}
+  .projectPage--corner .diagramSection{margin:0;padding:22px!important}
+}
+@media(max-width:520px){
+  .hero{min-height:auto}
+  .hero h1{max-width:unset}
+  .projectCard{margin-bottom:34px}
+  .projectImage,.projectCard:nth-child(2n) .projectImage{height:64vw;min-height:0}
+  .projectCard:nth-child(3n+2) .projectImage{height:82vw}
+  .projectCard:nth-child(3n) .projectImage{height:54vw}
+  .materialLabPreviews{display:block}
+  .materialLabPreview{display:none}
+  .materialLabPreview[data-active=true]{display:block}
+  .previewTabs{display:flex;gap:8px;grid-column:1/-1}
+  .previewTabs button{min-width:52px;min-height:42px;background:transparent;border:1px solid var(--line)}
+  .previewTabs button[aria-selected=true]{background:var(--accent);border-color:var(--accent);color:white}
+  .materialSaveActions,.materialUseActions{grid-template-columns:1fr}
+  .materialLabPreview dl{grid-template-columns:1fr}
+  .materialLabPreview dl div:last-child{grid-column:auto}
+  .summaryOptionList{font-size:.92rem}
+}
 .railHint{display:none;color:var(--olive);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em}
 .texturesRail{grid-template-columns:repeat(7,minmax(0,1fr));scrollbar-color:var(--olive) transparent;scrollbar-width:thin}
 .texturesRail article{min-width:0}

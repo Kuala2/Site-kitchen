@@ -3,6 +3,8 @@ import type {FacadeId,TopId} from '@/data/materials';
 export type Layout='straight'|'corner'|'u'|'island';
 export type OptionId=keyof typeof priceMatrix.options;
 export type KitchenConfig={layout:Layout;dimensions:{a:number;b?:number;c?:number;islandLength?:number};facade:FacadeId;top:TopId;options:OptionId[]};
+export const optionLabels:Record<OptionId,string>={uppers:'Верхние шкафы',columns:'Колонны под технику',island:'Остров',lights:'Подсветка',drawers:'Организация ящиков',delivery:'Доставка',installation:'Монтаж'};
+export function selectedOptionLabels(options:OptionId[]){return options.filter((option,index)=>options.indexOf(option)===index).map(option=>optionLabels[option]);}
 export const defaults:KitchenConfig={layout:'straight',dimensions:{a:3000},facade:'paint',top:'compact',options:['uppers']};
 const allowedLayouts:Layout[]=['straight','corner','u','island']; const facadeIds:FacadeId[]=['paint','light-veneer','dark-veneer','frame']; const topIds:TopId[]=['compact','stone','quartz']; const optionIds:OptionId[]=['uppers','columns','island','lights','drawers','delivery','installation'];
 export function normalizeOptions(layout:Layout,opts:OptionId[]){return opts.filter((o,i)=>optionIds.includes(o)&&opts.indexOf(o)===i&&(o!=='island'||layout==='island'));}
