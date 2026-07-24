@@ -3,7 +3,7 @@
 import {FormEvent,useMemo,useState} from 'react';
 import {useSearchParams} from 'next/navigation';
 import {calculate,dimensionSummary,parse,selectedOptionLabels} from '@/lib/configurator';
-import {facades,countertops} from '@/data/materials';
+import {facades,countertops,handles} from '@/data/materials';
 
 const layoutNames={straight:'Прямая',corner:'Угловая',u:'П-образная',island:'С островом'} as const;
 
@@ -19,8 +19,9 @@ export function DemoForm(){
 function ConfigSummary({config,low,high}:{config:NonNullable<ReturnType<typeof parse>>;low:number;high:number}){
   const facade=facades.find(item=>item.id===config.facade)?.name;
   const top=countertops.find(item=>item.id===config.top)?.name;
+  const handle=handles.find(item=>item.id===config.handle)?.name;
   const options=selectedOptionLabels(config.options);
-  return <section className="contactSummary" aria-label="Параметры из расчёта"><p className="eyebrow">Черновик из расчёта</p><h2>Параметры уже рядом</h2><dl><div><dt>Планировка</dt><dd>{layoutNames[config.layout]}</dd></div><div><dt>Размеры</dt><dd>{dimensionSummary(config)}</dd></div><div><dt>Фасад</dt><dd>{facade}</dd></div><div><dt>Столешница</dt><dd>{top}</dd></div><div><dt>Комплектация</dt><dd>{options.length?<ul className="summaryOptionList">{options.map(option=><li key={option}>{option}</li>)}</ul>:'без дополнительных позиций'}</dd></div><div><dt>Ориентир</dt><dd>{budgetRange(low,high)}</dd></div></dl></section>;
+  return <section className="contactSummary" aria-label="Параметры из расчёта"><p className="eyebrow">Черновик из расчёта</p><h2>Параметры уже рядом</h2><dl><div><dt>Планировка</dt><dd>{layoutNames[config.layout]}</dd></div><div><dt>Размеры</dt><dd>{dimensionSummary(config)}</dd></div><div><dt>Фасад</dt><dd>{facade}</dd></div><div><dt>Столешница</dt><dd>{top}</dd></div><div><dt>Ручка</dt><dd>{handle}</dd></div><div><dt>Комплектация</dt><dd>{options.length?<ul className="summaryOptionList">{options.map(option=><li key={option}>{option}</li>)}</ul>:'без дополнительных позиций'}</dd></div><div><dt>Ориентир</dt><dd>{budgetRange(low,high)}</dd></div></dl></section>;
 }
 
 function budgetRange(low:number,high:number){return `${formatBudget(low)}–${formatBudget(high)}`}

@@ -3,48 +3,37 @@
 import {useState} from 'react';
 import Link from 'next/link';
 import {countertops,facades,handles} from '@/data/materials';
+import {defaults,HandleId,KitchenConfig} from '@/lib/configurator';
+import {KitchenFront} from './KitchenFront';
 
-type MaterialSet={facade:string;top:string;handle:string};
-
+type MaterialSet={facade:KitchenConfig['facade'];top:KitchenConfig['top'];handle:HandleId};
 const initial:MaterialSet={facade:'light-veneer',top:'compact',handle:'profile'};
 
 export function MaterialsExplorer(){
-  const [draft,setDraft]=useState<MaterialSet>(initial);
-  const [savedA,setSavedA]=useState<MaterialSet>(initial);
-  const [savedB,setSavedB]=useState<MaterialSet>(initial);
-  const [activePreview,setActivePreview]=useState<'a'|'b'>('a');
-  const query=(set:MaterialSet)=>`layout=straight&a=3000&facade=${set.facade}&top=${set.top}`;
-  const update=(key:keyof MaterialSet,value:string)=>setDraft(current=>({...current,[key]:value}));
-  const save=(slot:'a'|'b')=>{if(slot==='a')setSavedA(draft);else setSavedB(draft);setActivePreview(slot)};
-
-  return <div className="materialsExplorer materialLab">
-    <div className="materialLabIntro"><p className="eyebrow">Лаборатория сочетаний</p><h2>Соберите два варианта рядом</h2><p>Сохраните текущую комбинацию как A, измените материалы и сохраните B. Это сравнение — ориентир перед просмотром реальных образцов.</p></div>
-    <div className="previewTabs" role="tablist" aria-label="Варианты материалов"><button type="button" role="tab" aria-selected={activePreview==='a'} onClick={()=>setActivePreview('a')}>A</button><button type="button" role="tab" aria-selected={activePreview==='b'} onClick={()=>setActivePreview('b')}>B</button></div>
-    <div className="materialLabPreviews">
-      <MaterialPreview label="A" set={savedA} active={activePreview==='a'}/>
-      <MaterialPreview label="B" set={savedB} active={activePreview==='b'}/>
-    </div>
-    <div className="materialControls">
-      <Choice title="Фасады" items={facades} value={draft.facade} set={value=>update('facade',value)}/>
-      <Choice title="Столешницы" items={countertops} value={draft.top} set={value=>update('top',value)}/>
-      <Choice title="Ручки" items={handles} value={draft.handle} set={value=>update('handle',value)}/>
-      <div className="materialSaveActions"><button className="button secondary" type="button" onClick={()=>save('a')}>Сохранить как A</button><button className="button secondary" type="button" onClick={()=>save('b')}>Сохранить как B</button></div>
-      <div className="materialUseActions"><Link className="button" href={`/calculator?${query(savedA)}`}>Использовать A в расчёте</Link><Link className="button" href={`/calculator?${query(savedB)}`}>Использовать B в расчёте</Link></div>
-    </div>
+  const [variants,setVariants]=useState<{a:MaterialSet;b:MaterialSet}>({a:initial,b:{facade:'frame',top:'quartz',handle:'bar'}});
+  const [active,setActive]=useState<'a'|'b'>('a');
+  const [view,setView]=useState<'scene'|'detail'>('scene');
+  const selected=variants[active];
+  const setMaterial=(key:keyof MaterialSet,value:string)=>setVariants(current=>({...current,[active]:{...current[active],[key]:value}}));
+  const config=(set:MaterialSet)=>({...defaults,facade:set.facade,top:set.top,handle:set.handle});
+  const query=(set:MaterialSet)=>`layout=straight&a=3000&facade=${set.facade}&top=${set.top}&handle=${set.handle}`;
+  const details=(set:MaterialSet)=>({facade:facades.find(item=>item.id===set.facade)?.name,top:countertops.find(item=>item.id===set.top)?.name,handle:handles.find(item=>item.id===set.handle)?.name});
+  const current=details(selected);
+  return <div className="materialsExplorer materialVisualizer">
+    <aside className="materialStudio">
+      <div className="variantTabs" role="tablist" aria-label="Редактируемый вариант"><button type="button" role="tab" aria-selected={active==='a'} onClick={()=>setActive('a')}>Вариант A</button><button type="button" role="tab" aria-selected={active==='b'} onClick={()=>setActive('b')}>Вариант B</button></div>
+      <p className="editingState" aria-live="polite">Сейчас редактируется вариант {active.toUpperCase()}. Изменения сохраняются автоматически.</p>
+      <div className="previewModeTabs" role="tablist" aria-label="Представление кухни"><button type="button" role="tab" aria-selected={view==='scene'} onClick={()=>setView('scene')}>Общий вид</button><button type="button" role="tab" aria-selected={view==='detail'} onClick={()=>setView('detail')}>Крупный план</button></div>
+      <MaterialScene config={config(selected)} view={view}/>
+      <dl className="currentMaterials"><div><dt>Фасад</dt><dd>{current.facade}</dd></div><div><dt>Столешница</dt><dd>{current.top}</dd></div><div><dt>Ручка</dt><dd>{current.handle}</dd></div></dl>
+      <Link className="button" href={`/calculator?${query(selected)}`}>Использовать {active.toUpperCase()} в расчёте</Link>
+      <div className="variantComparison" aria-label="Сравнение вариантов A и B"><p className="eyebrow">Сравнение</p>{(['a','b'] as const).map(slot=>{const values=details(variants[slot]);return <div key={slot}><b>Вариант {slot.toUpperCase()}</b><span>{values.facade} · {values.top} · {values.handle}</span><Link href={`/calculator?${query(variants[slot])}`}>В расчёт</Link></div>})}</div>
+      <p className="materialDisclaimer">Экран показывает сочетание, а цвет зависит от устройства. Реальный материал проверяют по образцу и при разном свете.</p>
+    </aside>
+    <section className="materialControls"><p className="eyebrow">Настройка варианта</p><h2>Материалы и фурнитура</h2><Choice title="Фасады" items={facades} value={selected.facade} set={value=>setMaterial('facade',value)}/><Choice title="Столешницы" items={countertops} value={selected.top} set={value=>setMaterial('top',value)}/><Choice title="Ручки" items={handles} value={selected.handle} set={value=>setMaterial('handle',value)} handles/></section>
   </div>;
 }
 
-function MaterialPreview({label,set,active}:{label:'A'|'B';set:MaterialSet;active:boolean}){
-  const facade=facades.find(item=>item.id===set.facade)?.name;
-  const top=countertops.find(item=>item.id===set.top)?.name;
-  const handle=handles.find(item=>item.id===set.handle)?.name;
-  return <article className="materialLabPreview" data-active={active} aria-label={`Вариант ${label}: ${facade}, ${top}, ручка ${handle}`}>
-    <p className="eyebrow">Вариант {label}</p>
-    <svg viewBox="0 0 700 430" role="img" aria-label={`Стилизованная развёртка варианта ${label}`}><rect width="700" height="430" fill="#e8e2d8"/><g className={`svgFacade ${set.facade}`}><rect x="80" y="80" width="540" height="280"/><path d="M80 210h540M210 80v280M350 80v280M490 80v280"/></g><rect className={`svgTop ${set.top}`} x="70" y="200" width="560" height="18"/><g className={`svgHandle ${set.handle}`}><path d="M150 232v50M290 232v50M430 232v50M570 232v50"/></g></svg>
-    <dl><div><dt>Фасад</dt><dd>{facade}</dd></div><div><dt>Столешница</dt><dd>{top}</dd></div><div><dt>Ручка</dt><dd>{handle}</dd></div></dl>
-  </article>;
-}
+export function MaterialScene({config,view}:{config:KitchenConfig;view:'scene'|'detail'}){return <div className={`materialScene materialScene--${view}`} role="tabpanel"><KitchenFront config={config} label={view==='scene'?'Общий вид выбранной кухни':'Крупный план выбранных материалов'}/>{view==='detail'&&<div className="materialDetail" aria-hidden="true"><span className={`detailFacade ${config.facade}`}/><span className={`detailTop ${config.top}`}/><span className={`detailHandle ${config.handle}`}/><i/></div>}</div>}
 
-function Choice({title,items,value,set}:{title:string;items:readonly {id:string;name:string;note:string;texture?:string}[];value:string;set:(value:string)=>void}){
-  return <fieldset><legend>{title}</legend>{items.map(item=><button type="button" aria-pressed={value===item.id} key={item.id} onClick={()=>set(item.id)}>{item.texture&&<i className={`texture ${item.texture}`}/>}<span><b>{item.name}</b><small>{item.note}</small></span></button>)}</fieldset>;
-}
+function Choice({title,items,value,set,handles:showHandles=false}:{title:string;items:readonly {id:string;name:string;note:string;texture?:string}[];value:string;set:(value:string)=>void;handles?:boolean}){return <fieldset><legend>{title}</legend>{items.map(item=><button type="button" aria-pressed={value===item.id} key={item.id} onClick={()=>set(item.id)}>{showHandles?<i className={`handleSwatch ${item.id}`}/>:item.texture&&<i className={`texture ${item.texture}`}/>}<span><b>{item.name}</b><small>{item.note}</small></span>{value===item.id&&<em aria-hidden="true">Выбрано</em>}</button>)}</fieldset>}
