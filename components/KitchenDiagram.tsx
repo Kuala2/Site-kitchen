@@ -1,42 +1,24 @@
+import type {KeyboardEvent} from 'react';
 import type {KitchenConfig} from '@/lib/configurator';
 import {buildKitchenModel,type KitchenWall,type ZoneId} from '@/lib/kitchen-model';
 
 const facadeFill={paint:'#aaa997','light-veneer':'#c9b28e','dark-veneer':'#5b463b',frame:'#cbc4b1'} as const;
 const topFill={compact:'#353631',stone:'#d6d1c7',quartz:'#bbb4aa'} as const;
-const zoneLabel:Record<ZoneId,string>={fridge:'Х',sink:'М',cooktop:'В'};
-const zoneName:Record<ZoneId,string>={fridge:'холодильник',sink:'мойка',cooktop:'варочная поверхность'};
-
+const zoneName:Record<ZoneId,string>={fridge:'Холодильник',sink:'Мойка',cooktop:'Варочная поверхность'};
 type Shape={x:number;y:number;width:number;height:number;horizontal:boolean};
-function shapeFor(id:KitchenWall['id']):Shape{
-  if(id==='a')return {x:120,y:76,width:480,height:72,horizontal:true};
-  if(id==='b')return {x:120,y:148,width:72,height:212,horizontal:false};
-  if(id==='c')return {x:528,y:148,width:72,height:212,horizontal:false};
-  return {x:270,y:272,width:220,height:72,horizontal:true};
-}
+function shapeFor(id:KitchenWall['id']):Shape{if(id==='a')return {x:120,y:76,width:480,height:72,horizontal:true};if(id==='b')return {x:120,y:148,width:72,height:212,horizontal:false};if(id==='c')return {x:528,y:148,width:72,height:212,horizontal:false};return {x:270,y:272,width:220,height:72,horizontal:true}}
 
-export function KitchenDiagram({config,large=false}:{config:KitchenConfig;large?:boolean}){
-  const model=buildKitchenModel(config),facade=facadeFill[config.facade],counter=topFill[config.top];
-  const zones=Object.entries(model.zones).map(([zone,place])=>`${zoneName[zone as ZoneId]}: ${place.wall.toUpperCase()}-${place.module+1}`).join(', ');
-  return <svg className={large?'diagram large':'diagram'} viewBox="0 0 720 440" role="img" aria-label={`План кухни. ${zones}.`} data-layout={config.layout}>
+export function KitchenDiagram({config,large=false,selectedZone,onPlaceZone}:{config:KitchenConfig;large?:boolean;selectedZone?:ZoneId;onPlaceZone?:(wall:KitchenWall['id'],module:number)=>void}){
+  const model=buildKitchenModel(config),facade=facadeFill[config.facade],counter=topFill[config.top],editable=!!selectedZone&&!!onPlaceZone;
+  return <svg className={`${large?'diagram large':'diagram'}${editable?' diagram--editable':''}`} viewBox="0 0 720 440" role="img" aria-label={editable?`План кухни. Выбрано: ${zoneName[selectedZone!]}. Выберите свободный модуль.`:'План кухни с расположением зон.'} data-layout={config.layout}>
     <defs><pattern id="plan-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#20211d" strokeOpacity=".06"/></pattern><marker id="dimension-arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M6 0 0 3 6 6" fill="none" stroke="currentColor" strokeWidth="1"/></marker></defs>
-    <rect width="720" height="440" fill="#eee9df"/><rect x="66" y="42" width="588" height="340" fill="url(#plan-grid)"/>
-    <path d="M66 382V42H654V382" fill="none" stroke="#20211d" strokeWidth="2"/><path d="M308 42h104M308 37h104" fill="none" stroke="#20211d"/>
-    {model.walls.map(wall=><Wall key={wall.id} wall={wall} facade={facade} counter={counter}/>) }
+    <rect width="720" height="440" fill="#eee9df"/><rect x="66" y="42" width="588" height="340" fill="url(#plan-grid)"/><path d="M66 382V42H654V382" fill="none" stroke="#20211d" strokeWidth="2"/><path d="M308 42h104M308 37h104" fill="none" stroke="#20211d"/>
+    {model.walls.map(wall=><Wall key={wall.id} wall={wall} facade={facade} counter={counter} selectedZone={selectedZone} editable={editable} onPlace={onPlaceZone}/>) }
     <path d="M120 28H600" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="360" y="22" textAnchor="middle" fontSize="12" fill="#20211d">A · {config.dimensions.a} мм</text>
-    {config.layout!=='straight'&&<><path d="M88 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="76" y="254" textAnchor="middle" transform="rotate(-90 76 254)" fontSize="12">B · {config.dimensions.b} мм</text></>}
-    {config.layout==='u'&&<><path d="M632 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="645" y="254" textAnchor="middle" transform="rotate(90 645 254)" fontSize="12">C · {config.dimensions.c} мм</text></>}
-    {config.layout==='island'&&<><path d="M270 364H490" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="380" y="379" textAnchor="middle" fontSize="12">остров · {config.dimensions.islandLength} мм</text></>}
-    <g fill="none" stroke="#c55235" strokeWidth="1.5" strokeDasharray="5 5"><path d="M150 112 300 112 455 112Z"/></g>
-    <text x="68" y="414" fontSize="11" fill="#20211d">Х холодильник · М мойка · В варочная · модуль ≈ 600 мм</text>
+    {config.layout!=='straight'&&<><path d="M88 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="76" y="254" textAnchor="middle" transform="rotate(-90 76 254)" fontSize="12">B · {config.dimensions.b} мм</text></>}{config.layout==='u'&&<><path d="M632 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="645" y="254" textAnchor="middle" transform="rotate(90 645 254)" fontSize="12">C · {config.dimensions.c} мм</text></>}{config.layout==='island'&&<><path d="M270 364H490" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="380" y="379" textAnchor="middle" fontSize="12">остров · {config.dimensions.islandLength} мм</text></>}
+    <g fill="none" stroke="#c55235" strokeWidth="1.5" strokeDasharray="5 5"><path d="M150 112 300 112 455 112Z"/></g><Legend/>
   </svg>;
 }
-
-function Wall({wall,facade,counter}:{wall:KitchenWall;facade:string;counter:string}){
-  const shape=shapeFor(wall.id),size=shape.horizontal?shape.width:shape.height;
-  return <g data-wall={wall.id}><rect {...shape} rx="2" fill={facade} stroke="#20211d" strokeWidth="1.5"/>
-    {wall.modules.map(module=>{const at=size/wall.modules.length*module.index;const x=shape.horizontal?shape.x+at:shape.x,y=shape.horizontal?shape.y:shape.y+at,w=shape.horizontal?size/wall.modules.length:shape.width,h=shape.horizontal?shape.height:size/wall.modules.length;return <g key={module.index} data-module={`${wall.id}-${module.index}`}><rect x={x} y={y} width={w} height={h} fill="none" stroke="#20211d" strokeOpacity=".45"/>{module.zone&&<Zone zone={module.zone} x={x+w/2} y={y+h/2}/>}</g>})}
-    <path d={shape.horizontal?`M${shape.x+4} ${shape.y+6}H${shape.x+shape.width-4}`:`M${shape.x+6} ${shape.y+4}V${shape.y+shape.height-4}`} stroke={counter} strokeWidth="9"/>
-  </g>;
-}
-
-function Zone({zone,x,y}:{zone:ZoneId;x:number;y:number}){return <g aria-label={zoneName[zone]}><circle cx={x} cy={y} r="14" fill="#eee9df" stroke="#c55235" strokeWidth="2"/><text x={x} y={y+4} textAnchor="middle" fontSize="12" fontWeight="700" fill="#20211d">{zoneLabel[zone]}</text></g>}
+function Wall({wall,facade,counter,selectedZone,editable,onPlace}:{wall:KitchenWall;facade:string;counter:string;selectedZone?:ZoneId;editable:boolean;onPlace?:((wall:KitchenWall['id'],module:number)=>void)}){const shape=shapeFor(wall.id),size=shape.horizontal?shape.width:shape.height;return <g data-wall={wall.id}><rect {...shape} rx="2" fill={facade} stroke="#20211d" strokeWidth="1.5"/>{wall.modules.map(module=>{const at=size/wall.modules.length*module.index,x=shape.horizontal?shape.x+at:shape.x,y=shape.horizontal?shape.y:shape.y+at,w=shape.horizontal?size/wall.modules.length:shape.width,h=shape.horizontal?shape.height:size/wall.modules.length,occupied=!!module.zone,place=()=>onPlace?.(wall.id,module.index),key=(event:KeyboardEvent<SVGGElement>)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();place()}};return <g key={module.index} data-module={`${wall.id}-${module.index}`} className={editable&&!occupied?'planModule planModule--available':'planModule'} role={editable&&!occupied?'button':undefined} tabIndex={editable&&!occupied?0:undefined} aria-label={editable&&!occupied?`Поставить ${zoneName[selectedZone!]}: ${wall.label}, модуль ${module.index+1}`:undefined} onClick={editable&&!occupied?place:undefined} onKeyDown={editable&&!occupied?key:undefined}><rect x={x} y={y} width={w} height={h} fill="none" stroke="#20211d" strokeOpacity=".45"/>{module.zone&&<ZoneIcon zone={module.zone} x={x+w/2} y={y+h/2}/>}</g>})}<path d={shape.horizontal?`M${shape.x+4} ${shape.y+6}H${shape.x+shape.width-4}`:`M${shape.x+6} ${shape.y+4}V${shape.y+shape.height-4}`} stroke={counter} strokeWidth="9"/></g>}
+function ZoneIcon({zone,x,y}:{zone:ZoneId;x:number;y:number}){return <g aria-label={zoneName[zone]}><circle cx={x} cy={y} r="16" fill="#f7f3eb" stroke="#c55235" strokeWidth="2"/>{zone==='fridge'&&<><rect x={x-6} y={y-9} width="12" height="18" rx="1" fill="none" stroke="#20211d" strokeWidth="1.7"/><path d={`M${x-4} ${y-1}h8M${x+3} ${y-6}v3M${x+3} ${y+3}v3`} stroke="#20211d" strokeWidth="1.5"/></>}{zone==='sink'&&<><rect x={x-8} y={y+1} width="16" height="7" rx="3" fill="none" stroke="#20211d" strokeWidth="1.7"/><path d={`M${x} ${y+1}v-7q0-5 5-5`} fill="none" stroke="#20211d" strokeWidth="1.7"/></>}{zone==='cooktop'&&<><circle cx={x-5} cy={y-5} r="3" fill="none" stroke="#20211d" strokeWidth="1.4"/><circle cx={x+5} cy={y-5} r="3" fill="none" stroke="#20211d" strokeWidth="1.4"/><circle cx={x-5} cy={y+5} r="3" fill="none" stroke="#20211d" strokeWidth="1.4"/><circle cx={x+5} cy={y+5} r="3" fill="none" stroke="#20211d" strokeWidth="1.4"/></>}</g>}
+function Legend(){return <g fontSize="11" fill="#20211d"><ZoneIcon zone="fridge" x={98} y={410}/><text x="122" y="414">холодильник</text><ZoneIcon zone="sink" x={260} y={410}/><text x="284" y="414">мойка</text><ZoneIcon zone="cooktop" x={385} y={410}/><text x="409" y="414">варочная</text><text x="563" y="414">модуль ≈ 600 мм</text></g>}
