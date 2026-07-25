@@ -1,6 +1,6 @@
 'use client';
 
-import {useState} from 'react';
+import {useEffect,useState} from 'react';
 import Link from 'next/link';
 import {countertops,facades,handles} from '@/data/materials';
 import {defaults,HandleId,KitchenConfig} from '@/lib/configurator';
@@ -12,6 +12,9 @@ const initial:MaterialSet={facade:'light-veneer',top:'compact',handle:'profile'}
 export function MaterialsExplorer(){
   const [variants,setVariants]=useState<{a:MaterialSet;b:MaterialSet}>({a:initial,b:{facade:'frame',top:'quartz',handle:'bar'}});
   const [active,setActive]=useState<'a'|'b'>('a');
+  const [restored,setRestored]=useState(false);
+  useEffect(()=>{try{const saved=JSON.parse(localStorage.getItem('sloy52-materials')||'null');if(saved?.a?.facade&&saved?.a?.top&&saved?.a?.handle&&saved?.b?.facade&&saved?.b?.top&&saved?.b?.handle)setVariants(saved)}catch{}setRestored(true)},[]);
+  useEffect(()=>{if(restored)localStorage.setItem('sloy52-materials',JSON.stringify(variants))},[variants,restored]);
   const selected=variants[active];
   const setMaterial=(key:keyof MaterialSet,value:string)=>setVariants(current=>({...current,[active]:{...current[active],[key]:value}}));
   const config=(set:MaterialSet)=>({...defaults,facade:set.facade,top:set.top,handle:set.handle});
