@@ -3,7 +3,7 @@ import type {KitchenConfig, Layout} from './configurator';
 export type WallId = 'a'|'b'|'c'|'island';
 export type ZoneId = 'fridge'|'sink'|'cooktop';
 export type ZonePlacement = {wall:WallId;module:number};
-export type KitchenModule = {wall:WallId;index:number;kind:'base'|'tall'|'island';width:number;zone?:ZoneId};
+export type KitchenModule = {wall:WallId;index:number;kind:'base'|'tall'|'island';width:number;zone?:ZoneId;column?:boolean};
 export type KitchenWall = {id:WallId;label:string;length:number;modules:KitchenModule[]};
 export type KitchenModel = {layout:Layout;walls:KitchenWall[];zones:Record<ZoneId,ZonePlacement>;moduleWidth:number};
 
@@ -48,13 +48,23 @@ export function normalizeZones(config:KitchenConfig,zones:Record<ZoneId,ZonePlac
   },{} as Record<ZoneId,ZonePlacement>);
 }
 
+export function normalizeColumn(config:KitchenConfig,placement=config.column):ZonePlacement{
+  const zones=normalizeZones(config,config.zones),walls=wallIds(config.layout).filter((id):id is Exclude<WallId,'island'>=>id!=='island');
+  const isFree=(wall:WallId,module:number)=>!Object.values(zones).some(zone=>zone.wall===wall&&zone.module===module);
+  if(placement&&walls.includes(placement.wall as Exclude<WallId,'island'>)&&placement.module>=0&&placement.module<moduleCount(lengthFor(config,placement.wall))&&isFree(placement.wall,placement.module))return placement;
+  for(const wall of walls)for(let slot=0;slot<moduleCount(lengthFor(config,wall));slot++)if(isFree(wall,slot))return {wall,module:slot};
+  return {wall:'a',module:0};
+}
+
 export function buildKitchenModel(config:KitchenConfig):KitchenModel{
   const zones=normalizeZones(config,config.zones);
+  const column=normalizeColumn({...config,zones},config.column);
   const walls=wallIds(config.layout).map(id=>{
     const length=lengthFor(config,id),count=moduleCount(length);
     const modules:Array<KitchenModule>=Array.from({length:count},(_,index)=>({
       wall:id,index,width:length/count,kind:zones.fridge.wall===id&&zones.fridge.module===index?'tall':id==='island'?'island':'base',
-      zone:zoneOrder.find(zone=>zones[zone].wall===id&&zones[zone].module===index)
+      zone:zoneOrder.find(zone=>zones[zone].wall===id&&zones[zone].module===index),
+      column:config.options.includes('columns')&&column.wall===id&&column.module===index
     }));
     return {id,label:labels[id],length,modules};
   });
