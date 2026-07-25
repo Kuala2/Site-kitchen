@@ -53,7 +53,7 @@ export function buildKitchenModel(config:KitchenConfig):KitchenModel{
   const walls=wallIds(config.layout).map(id=>{
     const length=lengthFor(config,id),count=moduleCount(length);
     const modules:Array<KitchenModule>=Array.from({length:count},(_,index)=>({
-      wall:id,index,width:length/count,kind:id==='island'?'island':index===0&&zones.fridge.wall===id&&zones.fridge.module===index?'tall':'base',
+      wall:id,index,width:length/count,kind:zones.fridge.wall===id&&zones.fridge.module===index?'tall':id==='island'?'island':'base',
       zone:zoneOrder.find(zone=>zones[zone].wall===id&&zones[zone].module===index)
     }));
     return {id,label:labels[id],length,modules};
