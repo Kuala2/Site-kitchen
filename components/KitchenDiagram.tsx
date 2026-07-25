@@ -1,21 +1,42 @@
 import type {KitchenConfig} from '@/lib/configurator';
+import {buildKitchenModel,type KitchenWall,type ZoneId} from '@/lib/kitchen-model';
 
-const layoutLabel={straight:'прямая',corner:'угловая',u:'П-образная',island:'с островом'} as const;
+const facadeFill={paint:'#aaa997','light-veneer':'#c9b28e','dark-veneer':'#5b463b',frame:'#cbc4b1'} as const;
+const topFill={compact:'#353631',stone:'#d6d1c7',quartz:'#bbb4aa'} as const;
+const zoneLabel:Record<ZoneId,string>={fridge:'Х',sink:'М',cooktop:'В'};
+const zoneName:Record<ZoneId,string>={fridge:'холодильник',sink:'мойка',cooktop:'варочная поверхность'};
+
+type Shape={x:number;y:number;width:number;height:number;horizontal:boolean};
+function shapeFor(id:KitchenWall['id']):Shape{
+  if(id==='a')return {x:120,y:76,width:480,height:72,horizontal:true};
+  if(id==='b')return {x:120,y:148,width:72,height:212,horizontal:false};
+  if(id==='c')return {x:528,y:148,width:72,height:212,horizontal:false};
+  return {x:270,y:272,width:220,height:72,horizontal:true};
+}
 
 export function KitchenDiagram({config,large=false}:{config:KitchenConfig;large?:boolean}){
-  const facade={paint:'#aaa997','light-veneer':'#c9b28e','dark-veneer':'#5b463b',frame:'#cbc4b1'}[config.facade];
-  const counter={compact:'#353631',stone:'#d6d1c7',quartz:'#bbb4aa'}[config.top];
-  const hasLeft=config.layout!=='straight',hasRight=config.layout==='u',hasIsland=config.layout==='island';
-  return <svg className={large?'diagram large':'diagram'} viewBox="0 0 600 400" role="img" aria-label={`План кухни: ${layoutLabel[config.layout]}. Условный чертёж с модулями, размерными линиями, окном, проходом, мойкой, варочной поверхностью, холодильником и рабочим треугольником.`}>
-    <defs><marker id="dimension-arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M6 0 0 3 6 6" fill="none" stroke="currentColor" strokeWidth="1"/></marker><pattern id="plan-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#20211d" strokeOpacity=".05" strokeWidth="1"/></pattern></defs>
-    <rect width="600" height="400" fill="#eee9df"/><rect x="48" y="48" width="504" height="304" fill="url(#plan-grid)"/>
-    <g fill="none" stroke="#20211d" strokeWidth="1.5"><path d="M48 352V48H552V352H500M420 352H48"/><path d="M420 352v-9m80 9v-9"/><path d="M245 48h120M245 43h120"/></g>
-    <g fill={facade} stroke="#20211d" strokeWidth="1.2"><rect x="70" y="70" width="460" height="66" rx="1"/>{hasLeft&&<rect x="70" y="136" width="66" height="166" rx="1"/>}{hasRight&&<rect x="464" y="136" width="66" height="166" rx="1"/>}{hasIsland&&<rect x="210" y="244" width="210" height="66" rx="1"/>}</g>
-    <g fill="none" stroke={counter} strokeWidth="8"><path d="M72 75H528"/>{hasLeft&&<path d="M75 134V298"/>}{hasRight&&<path d="M525 134V298"/>}{hasIsland&&<path d="M214 249H416"/>}</g>
-    <g fill="none" stroke="#20211d" strokeOpacity=".42" strokeWidth="1">{[147,224,301,378,455].map(x=><path key={x} d={`M${x} 70v66`}/>)}{hasLeft&&[191,246].map(y=><path key={y} d={`M70 ${y}h66`}/>)}{hasRight&&[191,246].map(y=><path key={y} d={`M464 ${y}h66`}/>)}{hasIsland&&[280,350].map(x=><path key={x} d={`M${x} 244v66`}/>)}</g>
-    <g fill="none" stroke="#20211d" strokeWidth="1.5"><g transform="translate(170 88)"><rect width="48" height="31" rx="3"/><rect x="5" y="5" width="38" height="21" rx="6"/><path d="M24 0v-7q0-8 9-8"/></g><g transform="translate(330 86)"><rect width="54" height="36" rx="2"/><circle cx="14" cy="11" r="6"/><circle cx="39" cy="11" r="6"/><circle cx="14" cy="27" r="6"/><circle cx="39" cy="27" r="6"/></g><g transform="translate(82 82)"><rect width="48" height="46" rx="2"/><path d="M0 21h48M24 0v46"/></g></g>
-    <g fill="none" stroke="#c55235" strokeWidth="1.5" strokeDasharray="5 5"><path d="M106 105 194 104 357 104Z"/><circle cx="106" cy="105" r="5" fill="#eee9df" strokeDasharray="none"/><circle cx="194" cy="104" r="5" fill="#eee9df" strokeDasharray="none"/><circle cx="357" cy="104" r="5" fill="#eee9df" strokeDasharray="none"/></g>
-    <g fill="#20211d" color="#20211d" fontFamily="var(--font-sans)" fontSize="12"><path d="M70 35H530" stroke="currentColor" strokeWidth="1" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="300" y="28" textAnchor="middle">A · {config.dimensions.a} мм</text>{hasLeft&&<><path d="M35 70V302" stroke="currentColor" strokeWidth="1" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="21" y="190" textAnchor="middle" transform="rotate(-90 21 190)">B · {config.dimensions.b} мм</text></>}{hasRight&&<><path d="M565 136V302" stroke="currentColor" strokeWidth="1" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="579" y="220" textAnchor="middle" transform="rotate(90 579 220)">C · {config.dimensions.c} мм</text></>}{hasIsland&&<><path d="M210 328H420" stroke="currentColor" strokeWidth="1" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="315" y="344" textAnchor="middle">остров · {config.dimensions.islandLength} мм</text></>}<text x="305" y="61" textAnchor="middle">окно</text><text x="460" y="370" textAnchor="middle">проход</text></g>
-    <g fontFamily="var(--font-sans)" fontSize="10" fill="#20211d" textAnchor="middle"><text x="106" y="109">Х</text><text x="194" y="108">М</text><text x="357" y="108">В</text></g><g fontFamily="var(--font-sans)" fontSize="10" fill="#20211d"><text x="56" y="385">Х холодильник · М мойка · В варочная</text><text x="408" y="385">модуль 600 мм</text></g>
-  </svg>
+  const model=buildKitchenModel(config),facade=facadeFill[config.facade],counter=topFill[config.top];
+  const zones=Object.entries(model.zones).map(([zone,place])=>`${zoneName[zone as ZoneId]}: ${place.wall.toUpperCase()}-${place.module+1}`).join(', ');
+  return <svg className={large?'diagram large':'diagram'} viewBox="0 0 720 440" role="img" aria-label={`План кухни. ${zones}.`} data-layout={config.layout}>
+    <defs><pattern id="plan-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#20211d" strokeOpacity=".06"/></pattern><marker id="dimension-arrow" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M6 0 0 3 6 6" fill="none" stroke="currentColor" strokeWidth="1"/></marker></defs>
+    <rect width="720" height="440" fill="#eee9df"/><rect x="66" y="42" width="588" height="340" fill="url(#plan-grid)"/>
+    <path d="M66 382V42H654V382" fill="none" stroke="#20211d" strokeWidth="2"/><path d="M308 42h104M308 37h104" fill="none" stroke="#20211d"/>
+    {model.walls.map(wall=><Wall key={wall.id} wall={wall} facade={facade} counter={counter}/>) }
+    <path d="M120 28H600" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="360" y="22" textAnchor="middle" fontSize="12" fill="#20211d">A · {config.dimensions.a} мм</text>
+    {config.layout!=='straight'&&<><path d="M88 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="76" y="254" textAnchor="middle" transform="rotate(-90 76 254)" fontSize="12">B · {config.dimensions.b} мм</text></>}
+    {config.layout==='u'&&<><path d="M632 148V360" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="645" y="254" textAnchor="middle" transform="rotate(90 645 254)" fontSize="12">C · {config.dimensions.c} мм</text></>}
+    {config.layout==='island'&&<><path d="M270 364H490" stroke="#20211d" markerStart="url(#dimension-arrow)" markerEnd="url(#dimension-arrow)"/><text x="380" y="379" textAnchor="middle" fontSize="12">остров · {config.dimensions.islandLength} мм</text></>}
+    <g fill="none" stroke="#c55235" strokeWidth="1.5" strokeDasharray="5 5"><path d="M150 112 300 112 455 112Z"/></g>
+    <text x="68" y="414" fontSize="11" fill="#20211d">Х холодильник · М мойка · В варочная · модуль ≈ 600 мм</text>
+  </svg>;
 }
+
+function Wall({wall,facade,counter}:{wall:KitchenWall;facade:string;counter:string}){
+  const shape=shapeFor(wall.id),size=shape.horizontal?shape.width:shape.height;
+  return <g data-wall={wall.id}><rect {...shape} rx="2" fill={facade} stroke="#20211d" strokeWidth="1.5"/>
+    {wall.modules.map(module=>{const at=size/wall.modules.length*module.index;const x=shape.horizontal?shape.x+at:shape.x,y=shape.horizontal?shape.y:shape.y+at,w=shape.horizontal?size/wall.modules.length:shape.width,h=shape.horizontal?shape.height:size/wall.modules.length;return <g key={module.index} data-module={`${wall.id}-${module.index}`}><rect x={x} y={y} width={w} height={h} fill="none" stroke="#20211d" strokeOpacity=".45"/>{module.zone&&<Zone zone={module.zone} x={x+w/2} y={y+h/2}/>}</g>})}
+    <path d={shape.horizontal?`M${shape.x+4} ${shape.y+6}H${shape.x+shape.width-4}`:`M${shape.x+6} ${shape.y+4}V${shape.y+shape.height-4}`} stroke={counter} strokeWidth="9"/>
+  </g>;
+}
+
+function Zone({zone,x,y}:{zone:ZoneId;x:number;y:number}){return <g aria-label={zoneName[zone]}><circle cx={x} cy={y} r="14" fill="#eee9df" stroke="#c55235" strokeWidth="2"/><text x={x} y={y+4} textAnchor="middle" fontSize="12" fontWeight="700" fill="#20211d">{zoneLabel[zone]}</text></g>}
