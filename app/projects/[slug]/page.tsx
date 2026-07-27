@@ -8,7 +8,7 @@ import {KitchenDiagram} from '@/components/KitchenDiagram';
 import {defaults} from '@/lib/configurator';
 
 export function generateStaticParams(){return projects.map(project=>({slug:project.slug}))}
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const project=projects.find(item=>item.slug===slug);return project?{title:project.name,description:project.description,alternates:{canonical:`/projects/${project.slug}`}}:{title:'Концепт не найден'}}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const project=projects.find(item=>item.slug===slug);return project?{title:project.name,description:project.description,alternates:{canonical:`/projects/${project.slug}/`},openGraph:{title:project.name,description:project.description,type:'article',images:[{url:project.image,alt:project.alt}]}}:{title:'Концепт не найден',robots:{index:false,follow:false}}}
 
 export default async function ProjectPage({params}:{params:Promise<{slug:string}>}){
   const {slug}=await params;
