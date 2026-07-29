@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: 'СЛОЙ 52',
   region: 'Демонстрационный концепт интерфейса',
-  domain: 'https://layer52.tw1.ru',
+  domain: 'https://site-kitchen-theta.vercel.app',
   demoMode: false,
   description: 'Демонстрационный концепт сайта производителя кухонь на заказ.'
 } as const;
