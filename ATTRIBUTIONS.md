@@ -30,3 +30,19 @@
 | public/images/reference-graphite-generated-a.png | Графитовая ниша, камень и подсветка |
 | public/images/reference-graphite-generated-b.png | Тёмный фасад и светлая столешница |
 | public/images/reference-walnut-generated.png | Ореховый фасад и светлая столешница |
+
+## Фотографии для мебели по комнатам
+
+Новые кадры загружены локально из бесплатной части Unsplash и используются как визуальные референсы демонстрационных концептов. Они не изображают выполненные проекты «СЛОЙ 52».
+
+| Локальный файл | Исходная страница | Автор / источник | Категория использования |
+|---|---|---|---|
+| public/images/room-office.jpg | https://unsplash.com/photos/modern-home-office-with-built-in-desk-and-storage-CkzzjmZbEMA | Puscas Adryan / Unsplash | рабочая зона, проект |
+| public/images/room-wardrobe.jpg | https://unsplash.com/photos/modern-bedroom-with-large-wardrobe-and-vanity-area-fortable-bed-Jxam7P99NMA | Obegi Home / Unsplash | гардеробная, hero и галерея |
+| public/images/room-living.jpg | https://unsplash.com/photos/modern-living-room-with-fireplace-and-built-in-shelves-FobBIRCCpfE | Franco Debartolo / Unsplash | гостиная, hero и галерея |
+| public/images/room-shelves.jpg | https://unsplash.com/photos/modern-built-in-shelving-unit-with-decorative-items-qbe_iid81xU | Franco Debartolo / Unsplash | прихожая и встроенное хранение |
+| public/images/room-bedroom.jpg | https://unsplash.com/photos/a-modern-bedroom-featuring-built-ins-and-a-desk-lW_sTyEg6mM | Shishu Yadava / Unsplash | спальня, проект гардеробной |
+| public/images/room-living-detail.jpg | https://unsplash.com/photos/modern-built-in-shelves-with-artful-decorations-aaONSK4BKxc | Caroline Badran / Unsplash | гостиная, проект |
+| public/images/room-living-wide.jpg | https://unsplash.com/photos/spacious-living-room-and-kitchen-with-wooden-built-in-shelves-p_9w69xML7o | Clay Banks / Unsplash | гостиная, каталог комнат |
+| public/images/room-bedroom-wood.jpg | https://unsplash.com/photos/modern-bedroom-featuring-a-bed-white-wardrobe-and-window-eeoQBGB-pYg | Irena Oze / Unsplash | спальня и гардеробная |
+| public/images/room-office-warm.jpg | https://unsplash.com/photos/modern-office-with-wooden-desk-and-shelves-ePhpXlJ6H2g | Caroline Badran / Unsplash | рабочая зона и галерея |

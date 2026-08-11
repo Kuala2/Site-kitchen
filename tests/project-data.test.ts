@@ -12,4 +12,11 @@ describe('данные концептов',()=>{
   it('помечают все сгенерированные изображения в подписи',()=>{
     for(const image of projects.flatMap(project=>project.gallery))if(image.generated)expect(image.caption).toMatch(/Сгенерированный/);
   });
+  it('содержат минимум семь концептов и три некухонных направления',()=>{
+    expect(projects.length).toBeGreaterThanOrEqual(7);
+    expect(new Set(projects.filter(project=>!project.calculatorCompatible).map(project=>project.category)).size).toBeGreaterThanOrEqual(3);
+  });
+  it('не отправляют некухонные концепты в кухонный калькулятор',()=>{
+    for(const project of projects.filter(project=>project.category!=='kitchen'))expect(project.calculatorCompatible).toBe(false);
+  });
 });
