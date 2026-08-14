@@ -1,0 +1,936 @@
+/* Re-art-direction layer: page compositions are intentionally route-specific. */
+
+.raFrame { width: min(calc(100% - (var(--gutter) * 2)), var(--container)); margin-inline: auto; }
+.raHome :is(header, section, div) > span,
+.raProjects :is(header, section, div) > span,
+.raCase :is(header, section, div) > span,
+.raMaterials :is(header, section, div) > span,
+.raAbout :is(header, section, div) > span,
+.raCalculator :is(header, section, div) > span,
+.raContacts :is(header, section, div) > span { font-size: .68rem; font-weight: 700; line-height: 1.2; letter-spacing: .14em; text-transform: uppercase; }
+.raHome h1, .raProjects h1, .raCase h1, .raMaterials h1, .raAbout h1, .raCalculator h1, .raContacts h1 { font-size: clamp(3.3rem, 5.8vw, 6rem); }
+.raHome h2, .raProjects h2, .raCase h2, .raMaterials h2, .raAbout h2, .raCalculator h2, .raContacts h2 { font-size: clamp(2.4rem, 4.1vw, 5rem); }
+
+.notFound { width: min(calc(100% - (var(--gutter) * 2)), var(--container)); min-height: calc(100svh - 82px); display: grid; align-content: center; justify-items: start; margin-inline: auto; padding-block: 72px; }
+.notFound h1 { max-width: 900px; margin: 18px 0 22px; font-size: clamp(3.2rem,5.8vw,6rem); }
+.notFound > p:not(.eyebrow) { max-width: 580px; color: var(--muted); }
+.notFound > a { display: inline-flex; justify-content: center; align-items: center; min-width: 190px; min-height: 48px; margin-top: 22px; padding: 13px 18px; color: #fff; background: var(--ink); font-weight: 700; }
+
+/* Home hero: one canonical responsive composition. */
+.raHomeHeroStage { position: relative; min-height: 100svh; background: var(--ink); }
+.raHomeHero { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: hidden; padding: 132px var(--gutter) 126px; color: #fff; background: var(--ink); }
+.raHomeHero > img { position: absolute !important; inset: -9% 0 !important; width: 100% !important; height: 118% !important; object-fit: cover; object-position: 56% 62%; transform-origin: center; }
+.raHomeHeroShade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,11,10,.9) 0, rgba(8,11,10,.67) 38%, rgba(8,11,10,.2) 72%), linear-gradient(180deg, rgba(8,11,10,.24) 0, transparent 30%, rgba(8,11,10,.24) 100%); }
+.raHomeHeroCopy { position: relative; z-index: 1; width: min(790px, 68vw); margin-top: 28px; }
+.raHomeHeroCopy h1 { max-width: 780px; margin: 0 0 20px; color: #fff; font-size: clamp(4.35rem, 5.7vw, 5.8rem); line-height: .91; }
+.raHomeHeroCopy > p { max-width: 660px; margin: 0 0 28px; color: #f0f2f0; font-size: clamp(1.02rem, 1.25vw, 1.22rem); line-height: 1.48; }
+.raHomeHeroActions { display: flex; flex-wrap: wrap; gap: 12px; }
+.raHomeHeroActions .actionLink { min-width: 232px; min-height: 58px; padding: 15px 20px; font-size: .9rem; white-space: nowrap; }
+.raHomeHeroActions .actionLink--primary { border-color: var(--copper); background: var(--copper); }
+.raHomeHeroActions .actionLink--inverse { background: rgba(8,11,10,.18); }
+.raHomeHeroRail { position: absolute; z-index: 2; inset: auto 0 0; min-height: 88px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: rgba(8,11,10,.82); border-top: 1px solid rgba(255,255,255,.3); }
+.raHomeHeroRail a { min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 18px clamp(20px, 2.7vw, 42px); color: #fff; border-left: 1px solid rgba(255,255,255,.24); font-size: clamp(.82rem, 1vw, 1rem); font-weight: 650; line-height: 1.25; transition: background-color .24s ease; }
+.raHomeHeroRail a:first-child { border-left: 0; }
+.raHomeHeroRail a:hover { background: rgba(255,255,255,.1); }
+.raHeroRailMobile { display: none; }
+
+@media (min-width: 1680px) {
+  .raHomeHeroCopy { width: min(900px, 68vw); }
+  .raHomeHeroCopy h1 { max-width: 880px; font-size: clamp(5.8rem, 5.7vw, 7rem); }
+  .raHomeHeroCopy > p { max-width: 740px; font-size: 1.3rem; }
+}
+
+@media (max-width: 760px) {
+  .raHomeHeroStage { min-height: 100svh; }
+  .raHomeHero { min-height: 100svh; height: auto; align-items: end; padding: 88px 16px 82px; }
+  .raHomeHero > img { inset: -10% 0 !important; height: 120% !important; object-position: 62% 58%; transform: none !important; }
+  .raHomeHeroShade { background: linear-gradient(180deg, rgba(8,11,10,.34) 0, rgba(8,11,10,.08) 26%, rgba(8,11,10,.38) 52%, rgba(8,11,10,.94) 100%); }
+  .raHomeHeroCopy { width: 100%; margin: 0; padding-bottom: 22px; transform: none !important; opacity: 1 !important; }
+  .raHomeHeroCopy h1 { max-width: 390px; margin-bottom: 14px; font-size: clamp(2.65rem, 12vw, 3.35rem); line-height: .92; letter-spacing: -.04em; }
+  .raHomeHeroCopy > p { max-width: 390px; margin-bottom: 18px; font-size: clamp(.88rem, 3.8vw, 1rem); line-height: 1.42; }
+  .raHomeHeroActions { display: grid; grid-template-columns: 1fr; gap: 8px; width: min(100%, 318px); }
+  .raHomeHeroActions .actionLink { width: 100%; min-width: 0; min-height: 50px; margin: 0; padding: 12px 15px; font-size: .82rem; }
+  .raHomeHeroActions .actionLink--inverse { min-height: 46px; background: rgba(8,11,10,.26); }
+  .raHomeHeroRail { min-height: 60px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .raHomeHeroRail a { min-height: 60px; padding: 12px 16px; font-size: .8rem; }
+  .raHomeHeroRail a:nth-child(n + 3) { display: none; }
+  .raHeroRailDesktop { display: none; }
+  .raHeroRailMobile { display: inline; }
+}
+
+@media (max-width: 350px) {
+  .raHomeHero { padding-inline: 14px; }
+  .raHomeHeroCopy h1 { font-size: 2.55rem; }
+  .raHomeHeroCopy > p { font-size: .86rem; }
+  .raHomeHeroRail a { padding-inline: 14px; }
+}
+
+.raHomeThesis { padding-block: 78px 88px; }
+.raHomeThesis > header { display: grid; grid-template-columns: 1fr 2fr; gap: 7vw; align-items: start; }
+.raHomeThesis > header h2 { max-width: 920px; margin: 0 0 28px; }
+.raHomeThesis > header p { grid-column: 2; margin: 0; color: var(--muted); font-size: 1.12rem; }
+.raHomeThesisLedger { width: 72%; margin: 46px 0 0 auto; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+.raHomeThesisLedger article { padding: 26px 28px 30px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.raHomeThesisLedger h3 { margin-bottom: 12px; font-size: 1.35rem; }
+.raHomeThesisLedger p { margin: 0; color: var(--muted); }
+
+.raHomeRange { padding-block: 62px 88px; color: #fff; }
+.raHomeRange::before { content: ""; position: absolute; z-index: -1; inset-inline: 0; height: 100%; margin-top: -62px; background: var(--ink); }
+.raHomeRange { position: relative; isolation: isolate; }
+.raHomeRange > header { display: grid; grid-template-columns: .65fr 1.35fr .8fr; gap: 4vw; align-items: end; margin-bottom: 38px; }
+.raHomeRange > header h2 { margin: 0 0 18px; color: #fff; }
+.raHomeRange > header p { grid-column: 3; margin: 0 0 8px; color: #b8c0bc; }
+.raHomeRangeGrid { display: grid; grid-template-columns: 1.45fr .9fr; grid-template-rows: auto auto; gap: 28px 36px; align-items: start; }
+.raHomeRangeItem--1 { grid-row: 1 / 3; }
+.raHomeRangeItem a { display: block; }
+.raHomeRangeItem figure { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+.raHomeRangeItem--1 figure { aspect-ratio: 5 / 4; }
+.raHomeRangeItem img { object-fit: cover; transition: transform .6s cubic-bezier(.16,1,.3,1); }
+.raHomeRangeItem:hover img { transform: scale(1.025); }
+.raHomeRangeItem a > div { position: relative; padding: 18px 46px 0 0; }
+.raHomeRangeItem a > div > span { color: #aeb7b2; }
+.raHomeRangeItem h3 { margin: 8px 0; color: #fff; font-size: clamp(1.9rem, 2.8vw, 3.3rem); }
+.raHomeRangeItem p { margin: 0; color: #b8c0bc; }
+.raHomeRangeItem .arrow { position: absolute; right: 0; top: 27px; }
+
+.raHomeCase { display: grid; grid-template-columns: 62% 38%; background: var(--surface-cool); }
+.raHomeCase > figure { position: relative; margin: 0; aspect-ratio: 5 / 4; overflow: hidden; }
+.raHomeCase > figure img { object-fit: cover; }
+.raHomeCase figcaption, .raHomeMaterial figcaption, .raCase figcaption, .raContactVisit figcaption { position: absolute; inset: auto 0 0; padding: 14px 18px; color: #fff; background: rgba(21,26,25,.9); font-size: .66rem; letter-spacing: .09em; text-transform: uppercase; }
+.raHomeCaseCopy { align-self: center; margin-left: -52px; padding: 58px 52px 64px; background: var(--paper); }
+.raHomeCaseCopy h2 { margin: 20px 0 22px; }
+.raHomeCaseCopy > p { color: var(--muted); }
+.raHomeCaseCopy dl { margin: 34px 0; border-top: 1px solid var(--ink); }
+.raHomeCaseCopy dl div { display: grid; grid-template-columns: 120px 1fr; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.raHomeCaseCopy dt { font-size: .68rem; font-weight: 700; text-transform: uppercase; }
+.raHomeCaseCopy dd { margin: 0; }
+
+.raHomeMaterial { display: grid; grid-template-columns: 1fr 1.7fr 1fr; gap: 0 42px; padding-block: 108px; }
+.raHomeMaterial > header { grid-column: 1 / 3; display: grid; grid-template-columns: .7fr 1.3fr; gap: 44px; margin-bottom: 52px; }
+.raHomeMaterial > header h2 { margin: 0; }
+.raHomeMaterial > figure { position: relative; grid-column: 2 / 4; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; }
+.raHomeMaterial > figure img { object-fit: cover; }
+.raHomeMaterial > div { grid-column: 1; grid-row: 2; align-self: end; padding: 28px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.raHomeMaterial > div p { color: var(--muted); }
+
+.raHomeProcess { color: #fff; background: var(--ink); }
+.raHomeProcessMedia { position: relative; aspect-ratio: 3.8 / 1; overflow: hidden; }
+.raHomeProcessMedia::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(21,26,25,.8), transparent 55%); }
+.raHomeProcessMedia img { object-fit: cover; object-position: center 55%; }
+.raHomeProcessHead { display: grid; grid-template-columns: 1fr 2fr; gap: 7vw; padding-block: 54px 40px; }
+.raHomeProcessHead h2 { max-width: 860px; margin: 0; color: #fff; }
+.raHomeProcess ol { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0 0 72px; list-style: none; border-top: 1px solid var(--line-dark); }
+.raHomeProcess li { padding: 22px 24px 0 0; border-right: 1px solid var(--line-dark); }
+.raHomeProcess li + li { padding-left: 24px; }
+.raHomeProcess li span { display: block; margin-bottom: 44px; color: #aeb7b2; }
+.raHomeProcess li h3 { color: #fff; font-size: 1.35rem; }
+.raHomeProcess li p { margin: 0; color: #aeb7b2; }
+.raHomeProcess ol { width: min(calc(100% - (var(--gutter) * 2)), var(--container)); margin-inline: auto; }
+
+.raHomeDecision { display: grid; grid-template-columns: 2fr 1fr; padding-block: 96px; }
+.raHomeDecision > div { padding-right: 8vw; }
+.raHomeDecision h2 { max-width: 820px; margin: 20px 0; }
+.raHomeDecision aside { align-self: end; padding: 30px; border-top: 1px solid var(--ink); background: var(--surface-cool); }
+.raHomeDecision aside p { margin-bottom: 36px; }
+.raHomeDecision aside a { display: flex; justify-content: space-between; gap: 24px; padding-top: 16px; border-top: 1px solid var(--ink); font-weight: 700; }
+
+/* Project archive: stable records, no mosaic holes. */
+.raArchiveHead { display: grid; grid-template-columns: 2fr 1fr; gap: 7vw; align-items: end; padding-block: 78px 62px; border-bottom: 1px solid var(--ink); }
+.raArchiveHead h1 { max-width: 980px; margin: 18px 0 0; }
+.raArchiveHead > p { margin: 0 0 10px; color: var(--muted); font-size: 1.1rem; }
+.raArchive { padding-bottom: 108px; }
+.raArchiveControls { position: sticky; z-index: 5; top: 0; display: grid; grid-template-columns: 160px 1fr auto; gap: 28px; align-items: center; padding: 17px 0; background: var(--paper); border-bottom: 1px solid var(--line); }
+.raArchiveControls p, .raArchiveControls span { margin: 0; font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raArchiveControls > div { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.raArchiveControls button { padding: 7px 0; border: 0; border-bottom: 1px solid transparent; background: transparent; cursor: pointer; }
+.raArchiveControls button[aria-pressed="true"] { border-color: var(--ink); font-weight: 700; }
+.raProjectRecord { border-bottom: 1px solid var(--line); }
+.raProjectRecord > a { display: grid; grid-template-columns: 1.35fr .65fr; align-items: stretch; }
+.raProjectRecord:nth-child(even) > a { grid-template-columns: .65fr 1.35fr; }
+.raProjectRecord:nth-child(even) figure { order: 2; }
+.raProjectRecord figure { position: relative; margin: 0; aspect-ratio: 16 / 9; overflow: hidden; }
+.raProjectRecord figure img { object-fit: cover; transition: transform .6s cubic-bezier(.16,1,.3,1); }
+.raProjectRecord:hover figure img { transform: scale(1.025); }
+.raProjectRecord figcaption { position: absolute; left: 0; bottom: 0; min-width: 52px; padding: 16px; color: #fff; background: var(--ink); text-align: center; }
+.raProjectRecordCopy { display: flex; flex-direction: column; justify-content: center; padding: 44px clamp(28px,4vw,64px); }
+.raProjectRecordCopy h2 { margin: 16px 0; font-size: clamp(2.5rem, 4vw, 4.8rem); }
+.raProjectRecordCopy > p { color: var(--muted); }
+.raProjectRecordCopy dl { margin: auto 0 0; padding-top: 28px; border-top: 1px solid var(--ink); }
+.raProjectRecordCopy dl div { display: grid; grid-template-columns: 100px 1fr; gap: 20px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.raProjectRecordCopy dt { font-size: .66rem; font-weight: 700; text-transform: uppercase; }
+.raProjectRecordCopy dd { margin: 0; }
+.raArchiveEmpty { padding: 80px 0; }
+.raArchiveEmpty button { padding: 12px 0; border: 0; border-bottom: 1px solid var(--ink); background: none; }
+.raArchitectInvite { display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; padding-block: 84px; border-top: 1px solid var(--ink); }
+.raArchitectInvite h2 { margin: 18px 0 0; }
+.raArchitectInvite > div:last-child { align-self: end; }
+
+/* Project detail: layered explanation. */
+.raCaseHero { position: relative; color: #fff; background: var(--ink); }
+.raCaseHero > figure { position: relative; margin: 0; aspect-ratio: 16 / 8.2; overflow: hidden; }
+.raCaseHero > figure::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10,12,11,.84), transparent 58%); }
+.raCaseHero > figure img { object-fit: cover; }
+.raCaseHero > header { position: absolute; z-index: 1; left: var(--gutter); bottom: 112px; width: min(780px, 62vw); }
+.raCaseHero > header h1 { margin: 18px 0; color: #fff; }
+.raCaseHero > header p { margin: 0; font-size: 1.08rem; }
+.raCaseHero > dl { position: absolute; z-index: 2; inset: auto 0 0; display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; padding-inline: var(--gutter); background: rgba(21,26,25,.94); }
+.raCaseHero > dl div { display: grid; grid-template-columns: 110px 1fr; gap: 18px; padding: 20px 24px 20px 0; border-right: 1px solid var(--line-dark); }
+.raCaseHero > dl div + div { padding-left: 24px; }
+.raCaseHero dt, .raCaseMaterial dt, .raCaseTask dt { font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raCaseHero dd, .raCaseMaterial dd, .raCaseTask dd { margin: 0; }
+
+.raCaseTask { display: grid; grid-template-columns: 1.05fr .95fr; gap: 8vw; padding-block: 96px; }
+.raCaseTask h2 { margin: 18px 0 0; font-size: clamp(2.8rem, 4.7vw, 5.5rem); }
+.raCaseTask > div:last-child { align-self: end; }
+.raCaseTask > div:last-child > p { color: var(--muted); font-size: 1.08rem; }
+.raCaseTask dl { margin: 34px 0 0; border-top: 1px solid var(--ink); }
+.raCaseTask dl div { display: grid; grid-template-columns: 150px 1fr; gap: 22px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+
+.raCaseSpace { display: grid; grid-template-columns: 1.35fr .65fr; align-items: center; padding-bottom: 108px; }
+.raCaseSpace > figure { position: relative; margin: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+.raCaseSpace > figure img { object-fit: cover; }
+.raCaseSpace > div { margin-left: -52px; padding: 48px 44px 54px; background: var(--surface-cool); }
+.raCaseSpace h2 { margin: 18px 0 24px; font-size: clamp(2.4rem, 3.3vw, 4rem); }
+.raCaseSpace > div > p { color: #414a46; }
+.raCaseSpace ol { margin: 32px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+.raCaseSpace li { display: grid; grid-template-columns: 42px 1fr; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.raCaseSpace li p { margin: 0; }
+
+/* Safe overlap: the copy never crosses the frame or rests against the image edge. */
+.raCaseSpace { gap: clamp(28px,4vw,64px); }
+.raCaseSpace > div { margin-left: 0; padding: clamp(40px,4vw,58px); }
+
+.raCaseMaterial { padding-block: 94px 112px; border-top: 1px solid var(--ink); }
+.raCaseMaterial > header { display: grid; grid-template-columns: 1fr 2fr; gap: 7vw; margin-bottom: 54px; }
+.raCaseMaterial > header h2 { max-width: 900px; margin: 0; }
+.raCaseMaterialBody { display: grid; grid-template-columns: 1.4fr .6fr; align-items: end; }
+.raCaseMaterialBody > figure { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; }
+.raCaseMaterialBody > figure img { object-fit: cover; }
+.raCaseMaterialBody > dl { margin: 0; padding: 36px; background: var(--paper-strong); border-top: 1px solid var(--ink); }
+.raCaseMaterialBody > dl div { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.raCaseMaterialBody dd { margin-top: 4px; }
+
+.raCaseResult { display: grid; grid-template-columns: 1.2fr .8fr; gap: 6vw; padding-block: 58px; border-top: 1px solid var(--ink); background: linear-gradient(90deg, transparent 0 66%, var(--surface-cool) 66%); }
+.raCaseResult h2 { margin: 18px 0 0; }
+.raCaseResult > div:last-child { align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 28px; }
+.raCaseNext { display: grid; grid-template-columns: 220px 170px 1fr auto; grid-template-rows: 1fr auto; gap: 8px 28px; align-items: center; min-height: 180px; padding-right: var(--gutter); color: #fff; background: var(--ink); }
+.raCaseNext figure { position: relative; grid-row: 1 / 3; align-self: stretch; margin: 0; overflow: hidden; }
+.raCaseNext figure img { object-fit: cover; }
+.raCaseNext > span { align-self: end; }
+.raCaseNext strong { align-self: end; font-family: var(--display); font-size: clamp(2rem, 3.4vw, 4rem); line-height: .95; }
+.raCaseNext small { grid-column: 3; align-self: start; }
+.raCaseNext .arrow { grid-column: 4; grid-row: 1 / 3; }
+
+/* Materials: tool first, no decorative opening. */
+.raMaterialLab { padding-block: 76px 92px; }
+.raMaterialLab > header { display: grid; grid-template-columns: 1.4fr .6fr; gap: 8vw; align-items: end; margin-bottom: 54px; }
+.raMaterialLab > header h1 { max-width: 980px; margin: 18px 0 0; }
+.raMaterialLab > header > p { margin: 0 0 10px; color: var(--muted); font-size: 1.08rem; }
+.raMaterials .materialWorkbench { grid-template-columns: 220px minmax(420px, 1.2fr) minmax(320px, .8fr); grid-template-rows: auto minmax(600px, auto); min-height: 0; }
+.raMaterials .materialWorkbench > figure { display: grid; grid-template-rows: auto minmax(360px, 1fr) auto; gap: 28px; min-height: 0; padding: 32px; aspect-ratio: auto; background: var(--surface-cool); }
+.raMaterials .materialWorkbench > figure::after { display: none; }
+.raMaterials .materialPreviewHeading { position: relative; z-index: 2; display: flex; justify-content: space-between; gap: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--ink); }
+.raMaterials .materialPreviewHeading span { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raMaterials .materialPreviewHeading strong { font-size: 1rem; font-weight: 600; text-align: right; }
+.raMaterials .materialSpecimen { position: relative; inset: auto; width: 100%; min-height: 360px; align-self: stretch; }
+.raMaterials .materialSpecimen--compact,
+.raMaterials .materialSpecimen--stone,
+.raMaterials .materialSpecimen--quartz { inset: auto; min-height: 220px; align-self: center; }
+.raMaterials .materialSpecimen--profile,
+.raMaterials .materialSpecimen--bar,
+.raMaterials .materialSpecimen--knob { inset: auto; min-height: 360px; }
+.raMaterials .materialWorkbench > figure figcaption { position: static; display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding-top: 20px; color: var(--ink); border-top: 1px solid var(--ink); font-size: inherit; letter-spacing: 0; text-transform: none; }
+.raMaterials .materialWorkbench > figure figcaption span { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raMaterials .materialWorkbench > figure figcaption strong { max-width: 38ch; font-size: 1rem; font-weight: 500; line-height: 1.5; }
+.raMaterials .materialOptions { min-height: 0; padding: 30px 24px; }
+.raMaterials .materialWorkbench > aside { padding: 32px 28px; }
+.raMaterials .materialWorkbench > aside h2 { font-size: clamp(2.2rem, 3vw, 3.7rem); }
+.raMaterials .materialWorkbench > aside > p:not(.sectionLabel) { font-size: 1.05rem; line-height: 1.55; }
+
+.raMaterialChecks { display: grid; grid-template-columns: 1.35fr .65fr; gap: 0 46px; padding-block: 96px 108px; border-top: 1px solid var(--ink); }
+.raMaterialChecks > header { grid-column: 1 / 3; display: grid; grid-template-columns: 1fr 2fr; gap: 7vw; margin-bottom: 52px; }
+.raMaterialChecks > header h2 { margin: 0; }
+.raMaterialChecks > figure { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; }
+.raMaterialChecks > figure img { object-fit: cover; }
+.raMaterialChecks > div { align-self: end; }
+.raMaterialChecks article { padding: 22px 0; border-top: 1px solid var(--line); }
+.raMaterialChecks article:first-child { border-top-color: var(--ink); }
+.raMaterialChecks article h3 { font-size: 1.35rem; }
+.raMaterialChecks article p { margin: 0; color: var(--muted); }
+.raMaterialRequest { display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; padding-block: 82px; border-top: 1px solid var(--ink); }
+.raMaterialRequest h2 { margin: 18px 0 0; }
+.raMaterialRequest > div:last-child { align-self: end; }
+
+/* About: documentary journal. */
+.raAboutLead { position: relative; color: #fff; background: var(--ink); }
+.raAboutLead > figure { position: relative; margin: 0; aspect-ratio: 16 / 7; overflow: hidden; }
+.raAboutLead > figure::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,12,11,.82), rgba(10,12,11,.06) 72%); }
+.raAboutLead > figure img { object-fit: cover; object-position: center 58%; }
+.raAboutLead > div { position: absolute; left: var(--gutter); top: 50%; width: min(760px, 56vw); transform: translateY(-50%); }
+.raAboutLead h1 { margin: 18px 0 22px; color: #fff; }
+.raAboutLead p { font-size: 1.08rem; }
+.raAboutProof { display: grid; grid-template-columns: 1.2fr .8fr; gap: 8vw; padding-block: 94px; }
+.raAboutProof h2 { margin: 18px 0 0; }
+.raAboutProof > div { align-self: end; }
+.raAboutProof > div > p { color: var(--muted); }
+.raAboutProof dl { display: grid; grid-template-columns: 1fr 1fr; margin: 34px 0 0; border-top: 1px solid var(--ink); }
+.raAboutProof dl div { padding: 18px 20px 0 0; border-right: 1px solid var(--line); }
+.raAboutProof dt { font-family: var(--display); font-size: 2.2rem; font-weight: 650; }
+.raAboutProof dd { margin: 6px 0 0; color: var(--muted); }
+.raProcessJournal { padding-bottom: 112px; }
+.raProcessJournal > header { display: grid; grid-template-columns: 1fr 2fr; gap: 7vw; margin-bottom: 52px; padding-top: 54px; border-top: 1px solid var(--ink); }
+.raProcessJournal > header h2 { margin: 0; }
+.raProcessJournal article { display: grid; grid-template-columns: 64px minmax(260px,.72fr) minmax(360px,1.28fr); gap: 30px; align-items: center; padding: 22px 0; border-top: 1px solid var(--line); }
+.raProcessJournal article:nth-child(even) { grid-template-columns: 64px minmax(360px,1.28fr) minmax(260px,.72fr); }
+.raProcessJournal article:nth-child(even) > div { grid-column: 3; }
+.raProcessJournal article:nth-child(even) figure { grid-column: 2; grid-row: 1; }
+.raProcessJournal article > span { align-self: start; padding-top: 8px; color: var(--copper); }
+.raProcessJournal article h3 { margin-bottom: 12px; font-size: clamp(1.9rem, 2.6vw, 3rem); }
+.raProcessJournal article p { margin: 0; color: var(--muted); }
+.raProcessJournal article figure { position: relative; margin: 0; aspect-ratio: 16 / 7; overflow: hidden; }
+.raProcessJournal article figure img { object-fit: cover; }
+.raQualityLedger { display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; padding-block: 88px; border-top: 1px solid var(--ink); }
+.raQualityLedger h2 { margin: 18px 0 0; }
+.raQualityLedger ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+.raQualityLedger li { padding: 13px 0; border-bottom: 1px solid var(--line); }
+.raQualityLedger .actionLink { grid-column: 2; justify-self: start; }
+
+/* Calculator: compact operate workspace. */
+.raCalculatorHead { display: grid; grid-template-columns: 1.35fr .65fr; gap: 8vw; align-items: end; padding-block: 64px 48px; }
+.raCalculatorHead h1 { max-width: 900px; margin: 18px 0 0; font-size: clamp(3rem, 4.8vw, 5.6rem); }
+.raCalculatorHead > p { margin: 0 0 8px; color: var(--muted); }
+.raCalculatorWorkspace { padding-bottom: 82px; }
+.raCalculator .estimatorWorkspace { grid-template-columns: minmax(0,1fr) 340px; min-height: 0; }
+.raCalculator .estimatorForm { padding: clamp(28px,3.5vw,52px); }
+.raCalculator .estimateStep h2 { font-size: clamp(2.3rem,3.6vw,4.2rem); }
+.raCalculator .liveEstimate { top: 0; min-height: 0; height: 100%; padding: 38px 30px; }
+.raCalculator .liveEstimate dl { margin-top: 52px; }
+.raCalculatorNotes { display: grid; grid-template-columns: repeat(3,1fr); padding-bottom: 92px; border-top: 1px solid var(--ink); }
+.raCalculatorNotes article { padding: 24px 32px 0 0; border-right: 1px solid var(--line); }
+.raCalculatorNotes article + article { padding-left: 32px; }
+.raCalculatorNotes h2 { font-size: 1.5rem; }
+.raCalculatorNotes p { margin: 0; color: var(--muted); }
+
+/* Contacts: visit and form lead the page. */
+.raContactTop { display: grid; grid-template-columns: 1.15fr .85fr; gap: 8vw; padding-block: 76px 82px; }
+.raContactTop h1 { max-width: 850px; margin: 18px 0 22px; }
+.raContactTop header > p { color: var(--muted); font-size: 1.08rem; }
+.raContactTop dl { align-self: end; margin: 0; border-top: 1px solid var(--ink); }
+.raContactTop > div { align-self: end; }
+.demoDisclaimer { max-width: 46ch; margin-top: 14px !important; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+.siteFooter .demoDisclaimer { color: #8e9692; }
+.raContactTop dl div { display: grid; grid-template-columns: 150px 1fr; gap: 22px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.raContactTop dt { font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raContactTop dd { margin: 0; }
+.raContactVisit { position: relative; }
+.raContactVisit figure { position: relative; margin: 0; aspect-ratio: 16 / 6.5; overflow: hidden; }
+.raContactVisit figure img { object-fit: cover; object-position: center 42%; }
+.raContactVisit > div { position: absolute; right: 0; bottom: 0; width: 36%; padding: 30px 34px; background: var(--paper); border-top: 1px solid var(--ink); }
+.raContactVisit ul { margin: 24px 0 0; padding: 0; list-style: none; }
+.raContactVisit li { padding: 10px 0; border-top: 1px solid var(--line); }
+.raContactForm { display: grid; grid-template-columns: .7fr 1.3fr; gap: 9vw; padding-block: 106px; }
+.raContactForm > header h2 { margin: 18px 0 22px; }
+.raContactForm > header p { color: var(--muted); }
+.raContactNext { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8vw; padding-block: 82px 96px; border-top: 1px solid var(--ink); }
+.raContactNext h2 { margin: 18px 0 0; }
+.raContactNext ol { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+.raContactNext li { display: grid; grid-template-columns: 54px 1fr; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.raContactNext li p { margin: 0; }
+
+/* Keep the shared shell restrained around the new compositions. */
+.siteFooter { padding: 48px var(--gutter) 22px; }
+.footerLead { grid-template-columns: .75fr 1.25fr; padding-bottom: 34px; }
+.footerLead h2 { max-width: 680px; font-size: clamp(2.4rem,3.4vw,4rem); }
+.footerGrid { grid-template-columns: .75fr .75fr 1.5fr; padding: 30px 0 36px; }
+.footerBottom { padding-top: 16px; }
+
+/* Explicitly cancel legacy artificial heights for the atoms retained by re-art-direction. */
+.raMaterials .materialWorkbench,
+.raMaterials .materialWorkbench > figure,
+.raCalculator .estimatorWorkspace,
+.raCalculator .liveEstimate { min-height: 0; }
+
+@media (max-width: 1120px) {
+  .raMaterials .materialWorkbench { grid-template-columns: 200px minmax(0, 1fr); }
+  .raMaterials .materialWorkbench > aside { grid-column: 1 / -1; }
+}
+
+@media (max-width: 1000px) {
+  .raHomeThesisLedger { width: 78%; }
+  .raHomeCase { grid-template-columns: 56% 44%; }
+  .raHomeMaterial { grid-template-columns: .8fr 1.5fr .7fr; }
+  .raProjectRecord > a, .raProjectRecord:nth-child(even) > a { grid-template-columns: 1fr 1fr; }
+  .raCaseHero > header { width: 72vw; }
+  .raCaseSpace { grid-template-columns: 1.15fr .85fr; }
+  .raMaterials .materialWorkbench { grid-template-columns: 190px 1fr; }
+  .raMaterials .materialWorkbench > aside { grid-column: 1 / -1; }
+}
+
+/* Craft and motion pass */
+.raHomeThesis { position: relative; z-index: 2; margin-top: 0; padding-top: 96px; background: var(--paper); }
+.raHomeThesis > header { grid-template-columns: minmax(180px,.72fr) minmax(0,1.4fr) minmax(260px,.78fr); gap: clamp(28px,4vw,72px); }
+.raHomeThesis > header h2 { font-size: clamp(3rem,4.3vw,5.25rem); line-height: .95; }
+.raHomeThesis > header p { grid-column: 3; padding-top: 5px; }
+.raHomeThesisEvidence { display: grid; grid-template-columns: .55fr 1.45fr; margin-top: 58px; color: #fff; background: var(--ink); }
+.raPlanIntro { display: flex; flex-direction: column; justify-content: space-between; min-height: 430px; padding: 34px; border-right: 1px solid var(--line-dark); }
+.raPlanIntro > span, .raPlan header span, .raPlanCanvas small { font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.raPlanIntro strong { margin: auto 0; font-size: clamp(2rem,2.5vw,3.2rem); line-height: .98; letter-spacing: -.045em; }
+.raPlanIntro p { max-width: 31ch; margin: 0; color: #afb8b3; }
+.raPlanPair { display: grid; grid-template-columns: 1fr 1fr; }
+.raPlan { min-width: 0; padding: 26px; }
+.raPlan + .raPlan { border-left: 1px solid var(--line-dark); }
+.raPlan header { display: flex; justify-content: space-between; gap: 14px; padding-bottom: 20px; color: #b8c0bc; }
+.raPlan header b { font-size: .72rem; font-weight: 500; }
+.raPlanCanvas { position: relative; height: 322px; overflow: hidden; border: 1px solid #66706b; background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px); background-size: 24px 24px; }
+.raPlanCanvas i { position: absolute; display: block; }
+.raPlanCanvas .wall { background: #e9ecea; }
+.raPlanCanvas .wall--a { left: 18px; right: 42px; top: 28px; height: 7px; }
+.raPlanCanvas .wall--b { left: 18px; top: 28px; bottom: 22px; width: 7px; }
+.raPlanCanvas .door { right: 40px; top: 28px; width: 82px; height: 82px; border-right: 1px solid #8a948f; border-bottom: 1px solid #8a948f; border-radius: 0 0 82px 0; }
+.raPlanCanvas .unit { top: 52px; height: 57px; border: 1px solid #bdc4c0; background: #303735; }
+.raPlanCanvas .unit--1 { left: 31px; width: 76px; }
+.raPlanCanvas .unit--2 { left: 113px; width: 100px; }
+.raPlanCanvas .unit--3 { left: 219px; width: 72px; }
+.raPlanCanvas .unit--line { left: 31px; right: 126px; background: var(--copper); border-color: #d39a75; }
+.raPlanCanvas .route { left: 76px; right: 56px; bottom: 54px; height: 80px; border: 1px dashed #d5dad7; border-radius: 50%; }
+.raPlanCanvas em { position: absolute; right: 12px; top: 126px; padding: 6px 8px; color: #fff; border: 1px solid currentColor; font-size: .7rem; font-style: normal; }
+.raPlan--module .raPlanCanvas em { color: #d58c62; }
+.raPlanCanvas small { position: absolute; left: 30px; bottom: 20px; color: #aeb7b2; }
+.raHomeThesisLedger { width: 100%; margin-top: 0; grid-template-columns: repeat(4,1fr); border-top: 0; }
+.raHomeThesisLedger article { min-height: 180px; }
+
+.raHomeCase { grid-template-columns: minmax(0,1.25fr) minmax(400px,.75fr); gap: 0; padding: clamp(56px,6vw,96px) var(--gutter); background: var(--surface-cool); }
+.raHomeCase > figure { aspect-ratio: 1.25 / 1; }
+.raHomeCaseCopy { align-self: center; margin: 0; padding: clamp(40px,4vw,68px); background: var(--paper); }
+
+[data-parallax] { overflow: hidden; }
+[data-parallax] img { transform: scale(1.035); will-change: transform; }
+.raHomeProcess ol { position: relative; }
+.raHomeProcess ol::before { content: ""; position: absolute; z-index: 2; left: var(--gutter); right: var(--gutter); top: -2px; height: 3px; background: var(--copper); transform: scaleX(var(--process-progress,0)); transform-origin: left; }
+.raProcessJournal > div { position: relative; }
+.raProcessJournal > div::before { content: ""; position: absolute; z-index: 2; left: 25%; top: 0; bottom: 0; width: 2px; background: var(--copper); transform: scaleY(var(--process-progress,0)); transform-origin: top; }
+
+.raMaterialStory { padding-block: 94px 118px; border-top: 1px solid var(--ink); }
+.raMaterialStory > header { display: grid; grid-template-columns: .55fr 1.3fr .65fr; gap: clamp(28px,4vw,72px); margin-bottom: 54px; }
+.raMaterialStory > header h2 { max-width: 850px; margin: 0; }
+.raMaterialStory > header p { margin: 0; color: var(--muted); }
+.raMaterialStoryList { border-top: 1px solid var(--ink); }
+.raMaterialStoryList article { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(360px,.8fr); gap: clamp(40px,7vw,120px); align-items: center; padding-block: clamp(40px,5vw,76px); border-bottom: 1px solid var(--line); }
+.raMaterialStoryList article:nth-child(even) { grid-template-columns: minmax(360px,.8fr) minmax(0,1.2fr); }
+.raMaterialStoryList article:nth-child(even) figure { order: 2; }
+.raMaterialStoryList figure { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-cool); }
+.raMaterialStoryList img { object-fit: cover; }
+.raMaterialStoryList figcaption { position: absolute; left: 0; bottom: 0; padding: 13px 17px; color: #fff; background: rgba(21,26,25,.9); font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; }
+.raMaterialStoryList article > div { max-width: 520px; }
+.raMaterialStoryList article > div > span { color: var(--copper); }
+.raMaterialStoryList h3 { margin: 20px 0 18px; font-size: clamp(2.15rem,3vw,3.8rem); line-height: .98; }
+.raMaterialStoryList p { max-width: 44ch; margin: 0; color: var(--muted); }
+
+.choiceList--types { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border: 0; }
+.choiceList--types > button { position: relative; min-height: 154px; display: flex; flex-direction: column; align-items: flex-start; padding: 20px; border: 1px solid var(--line); background: #fff; }
+.choiceList--types > button:last-child { grid-column: 1 / 3; min-height: 128px; }
+.choiceList--types > button span { padding-right: 32px; font-size: 1.25rem; }
+.choiceList--types > button small { max-width: 34ch; margin-top: 12px; }
+.choiceList--types > button i { margin-top: auto; padding-top: 18px; }
+.choiceList--types > button::after { content: ""; position: absolute; top: 18px; right: 18px; width: 18px; height: 18px; border: 1px solid var(--ink); border-radius: 50%; }
+.choiceList--types > button[aria-pressed="true"] { color: #fff; border-color: var(--ink); background: var(--ink); }
+.choiceList--types > button[aria-pressed="true"] small { color: #c8cfcb; }
+.choiceList--types > button[aria-pressed="true"]::after { border: 5px solid var(--ink); background: var(--copper); box-shadow: 0 0 0 1px #fff; }
+.priceDrivers { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line-dark); }
+.priceDrivers > span { display: block; margin-bottom: 12px; font-size: .67rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.priceDrivers ul { margin: 0; padding-left: 18px; color: #cbd1ce; }
+.priceDrivers li + li { margin-top: 7px; }
+.estimateSummary > div { position: relative; padding-right: 76px; }
+.estimateSummary button { position: absolute; right: 0; top: 13px; padding: 0; color: var(--muted); border: 0; border-bottom: 1px solid currentColor; background: none; font-size: .68rem; cursor: pointer; }
+
+@media (max-width: 1000px) {
+  .raHomeThesis > header { grid-template-columns: .7fr 1.3fr; }
+  .raHomeThesis > header p { grid-column: 2; }
+  .raHomeThesisEvidence { grid-template-columns: 1fr; }
+  .raPlanIntro { min-height: 250px; border-right: 0; border-bottom: 1px solid var(--line-dark); }
+  .raHomeThesisLedger { grid-template-columns: 1fr 1fr; }
+  .raMaterialStory > header { grid-template-columns: .65fr 1.35fr; }
+  .raMaterialStory > header p { grid-column: 2; }
+}
+
+@media (max-width: 760px) {
+  .notFound { width: calc(100% - 32px); min-height: calc(100svh - 64px); padding-block: 56px; }
+  .notFound h1 { font-size: clamp(3rem,13vw,4rem); line-height: .94; }
+  .raHomeThesis { margin-top: 0; padding-top: 68px; }
+  .raHomeThesis > header { display: block; }
+  .raHomeThesis > header h2 { margin-top: 18px; font-size: clamp(2.65rem,12vw,3.55rem); }
+  .raHomeThesis > header p { margin-top: 22px; }
+  .raHomeThesisEvidence { margin-top: 38px; }
+  .raPlanIntro { min-height: 270px; padding: 24px 20px; }
+  .raPlanIntro strong { font-size: 2.25rem; }
+  .raPlanPair { grid-template-columns: 1fr; }
+  .raPlan + .raPlan { border-left: 0; border-top: 1px solid var(--line-dark); }
+  .raPlan { padding: 20px; }
+  .raPlanCanvas { height: 280px; }
+  .raHomeThesisLedger { grid-template-columns: 1fr; }
+  .raHomeThesisLedger article { min-height: 0; }
+  .raHomeCase { display: block; padding: 58px 16px 66px; }
+  .raHomeCase > figure { aspect-ratio: 4 / 3; }
+  .raHomeCaseCopy { margin: -22px 14px 0; padding: 34px 20px 40px; }
+  [data-parallax] img { transform: none !important; }
+  .raHomeProcess ol::before { left: var(--gutter); right: auto; top: 0; bottom: 56px; width: 2px; height: auto; transform: scaleY(var(--process-progress,0)); transform-origin: top; }
+  .raProcessJournal > div::before { left: 21px; }
+  .raMaterialStory { padding-block: 72px 82px; }
+  .raMaterialStory > header { display: block; margin-bottom: 34px; }
+  .raMaterialStory > header span { display: block; margin-bottom: 18px; }
+  .raMaterialStory > header p { margin-top: 20px; }
+  .raMaterialStoryList article, .raMaterialStoryList article:nth-child(even) { display: flex; flex-direction: column; gap: 28px; align-items: stretch; padding-block: 36px; }
+  .raMaterialStoryList article:nth-child(even) figure { order: 0; }
+  .raMaterialStoryList figure { aspect-ratio: 4 / 3; }
+  .raMaterialStoryList h3 { font-size: 2.25rem; }
+  .choiceList--types { grid-template-columns: 1fr; }
+  .choiceList--types > button, .choiceList--types > button:last-child { grid-column: auto; min-height: 136px; }
+  .raProjectRecord > a, .raProjectRecord:nth-child(even) > a { display: flex; flex-direction: column; }
+  .raProjectRecord figure, .raProjectRecord:nth-child(even) figure, .raProjectRecord:nth-child(3n) figure { order: 0; aspect-ratio: 4 / 3; }
+  .raProjectRecordCopy, .raProjectRecord:nth-child(even) .raProjectRecordCopy { order: 1; padding: 30px 10px 48px; }
+  .raProjectRecord figcaption { top: 0; bottom: auto; }
+  .raProjectRecord + .raProjectRecord { margin-top: 32px; padding-top: 24px; border-top: 0; }
+  .footerLead { grid-template-columns: 1fr; }
+  .footerLead h2 { max-width: 310px; overflow-wrap: normal; word-break: normal; }
+  .footerGrid { grid-template-columns: 1fr 1fr; }
+  .footerGrid > div:last-child { grid-column: 1 / 3; }
+}
+
+/* Superseded mobile homepage draft; retained inert to preserve the surrounding dirty worktree. */
+@media (max-width: 0px) {
+  .raHomeRange { padding-block: 48px 56px; }
+  .raHomeRange::before { margin-top: -48px; }
+  .raHomeRange > header { display: block; margin-bottom: 34px; }
+  .raHomeRange > header > span { display: block; margin-bottom: 16px; }
+  .raHomeRange > header h2 { max-width: 330px; margin: 0 0 18px; font-size: clamp(2.25rem,10.2vw,2.65rem); line-height: .96; letter-spacing: -.035em; }
+  .raHomeRange > header p { max-width: 335px; margin: 0; color: #c8cfcb; font-size: .98rem; line-height: 1.52; }
+  .raHomeRangeGrid { display: block; border-top: 1px solid var(--line-dark); }
+  .raHomeRangeItem { margin: 0; border-bottom: 1px solid var(--line-dark); }
+  .raHomeRangeItem a { display: grid; grid-template-columns: 112px minmax(0,1fr); gap: 16px; align-items: center; padding-block: 18px; }
+  .raHomeRangeItem figure, .raHomeRangeItem--1 figure { width: 112px; height: 148px; aspect-ratio: auto; }
+  .raHomeRangeItem a > div { min-width: 0; padding: 0; }
+  .raHomeRangeItem h3 { margin: 7px 0 8px; font-size: 1.55rem; line-height: 1; }
+  .raHomeRangeItem p { font-size: .88rem; line-height: 1.45; }
+  .raHomeRangeItem .arrow { display: none; }
+
+  .raHomeCase { display: block; grid-template-columns: none; padding: 56px 16px 64px; background: var(--surface-cool); }
+  .raHomeCase > figure { width: 100%; margin: 0; aspect-ratio: 4 / 3; }
+  .raHomeCase figcaption { right: 0; max-width: 100%; padding: 11px 14px; }
+  .raHomeCaseCopy { position: relative; margin: 0; padding: 34px 20px 40px; background: var(--paper); }
+  .raHomeCaseCopy h2 { margin: 16px 0 18px; font-size: 2.55rem; line-height: .96; }
+  .raHomeCaseCopy dl { margin-block: 28px; }
+  .raHomeCaseCopy dl div { grid-template-columns: 1fr; gap: 5px; padding-block: 14px; }
+}
+
+/* Superseded expanded draft; the active safeguards live at the end of this file. */
+@media (max-width: 0px) {
+  .raHomeRange {
+    padding-block: 48px 56px;
+  }
+
+  .raHomeRange::before {
+    margin-top: -48px;
+  }
+
+  .raHomeRange > header {
+    display: block;
+    margin-bottom: 34px;
+  }
+
+  .raHomeRange > header > span {
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .raHomeRange > header h2 {
+    max-width: 330px;
+    margin: 0 0 18px;
+    font-size: clamp(2.25rem, 10.2vw, 2.65rem);
+    line-height: .96;
+    letter-spacing: -.035em;
+  }
+
+  .raHomeRange > header p {
+    max-width: 335px;
+    margin: 0;
+    color: #c8cfcb;
+    font-size: .98rem;
+    line-height: 1.52;
+  }
+
+  .raHomeRangeGrid {
+    display: block;
+    border-top: 1px solid var(--line-dark);
+  }
+
+  .raHomeRangeItem {
+    margin: 0;
+    border-bottom: 1px solid var(--line-dark);
+  }
+
+  .raHomeRangeItem a {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 16px;
+    align-items: center;
+    padding-block: 18px;
+  }
+
+  .raHomeRangeItem figure,
+  .raHomeRangeItem--1 figure {
+    width: 112px;
+    height: 148px;
+    aspect-ratio: auto;
+  }
+
+  .raHomeRangeItem a > div {
+    min-width: 0;
+    padding: 0;
+  }
+
+  .raHomeRangeItem h3 {
+    margin: 7px 0 8px;
+    font-size: 1.55rem;
+    line-height: 1;
+  }
+
+  .raHomeRangeItem p {
+    font-size: .88rem;
+    line-height: 1.45;
+  }
+
+  .raHomeRangeItem .arrow {
+    display: none;
+  }
+
+  .raHomeCase {
+    display: block;
+    grid-template-columns: none;
+    padding: 56px 16px 64px;
+    background: var(--surface-cool);
+  }
+
+  .raHomeCase > figure {
+    width: 100%;
+    margin: 0;
+    aspect-ratio: 4 / 3;
+  }
+
+  .raHomeCase figcaption {
+    right: 0;
+    max-width: 100%;
+    padding: 11px 14px;
+  }
+
+  .raHomeCaseCopy {
+    position: relative;
+    margin: 0;
+    padding: 34px 20px 40px;
+    background: var(--paper);
+  }
+
+  .raHomeCaseCopy h2 {
+    margin: 16px 0 18px;
+    font-size: 2.55rem;
+    line-height: .96;
+  }
+
+  .raHomeCaseCopy dl {
+    margin-block: 28px;
+  }
+
+  .raHomeCaseCopy dl div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    padding-block: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .raHomeHero > img, .raHomeHeroCopy, [data-parallax] img, .raMaterialStoryMedia figure { transform: none !important; transition: none !important; }
+}
+
+/* Wide desktop scale: Full HD and larger should keep the same visual authority as 1440px. */
+@media (min-width: 1680px) {
+  :root { --gutter: clamp(52px,3.3vw,76px); --container: 1760px; }
+  .siteHeader { height: 92px; }
+  .brandMark { font-size: 1.62rem; }
+  .brand small { font-size: .65rem; }
+  .mainNav { gap: clamp(34px,3vw,62px); }
+  .mainNav a, .headerAction { font-size: 1.05rem; }
+  .actionLink { min-height: 54px; padding: 15px 19px; font-size: .82rem; }
+  .raHomeThesis > header h2 { font-size: clamp(4.4rem,4.25vw,5.35rem); }
+  .raHome h2, .raProjects h2, .raCase h2, .raMaterials h2, .raAbout h2, .raCalculator h2, .raContacts h2 { font-size: clamp(3.15rem,3.75vw,5rem); }
+  .raProjects h1, .raCase h1, .raMaterials h1, .raAbout h1, .raCalculator h1, .raContacts h1 { font-size: clamp(4.6rem,5.15vw,6.2rem); }
+  p, li, dd { font-size: 1.08rem; }
+  .raHomeProcessMedia { aspect-ratio: 4.8 / 1; }
+  .raHomeProcessMedia img { object-position: center 48%; }
+  .raHomeProcessHead { grid-template-columns: .7fr 1.3fr; }
+  .raHomeProcess ol { width: min(calc(100% - var(--gutter)*2),var(--container)); }
+  .raHomeProcess li:first-child { padding-left: 0; }
+}
+
+@media (max-width: 760px) {
+  .raProjects h1, .raCase h1, .raMaterials h1, .raAbout h1, .raCalculator h1, .raContacts h1 { font-size: clamp(3rem,13vw,4.6rem); }
+  .raHome h2, .raProjects h2, .raCase h2, .raMaterials h2, .raAbout h2, .raCalculator h2, .raContacts h2 { font-size: clamp(2.35rem,10.8vw,4rem); }
+
+  .raHomeThesis { padding-block: 72px; }
+  .raHomeThesis > header, .raHomeRange > header, .raHomeProcessHead, .raCaseMaterial > header, .raMaterialChecks > header, .raProcessJournal > header { grid-template-columns: 1fr; gap: 20px; }
+  .raHomeThesis > header p, .raHomeRange > header p { grid-column: 1; }
+  .raHomeThesisLedger { width: 100%; margin-top: 46px; grid-template-columns: 1fr; }
+  .raHomeRange { padding-block: 54px 62px; }
+  .raHomeRange::before { margin-top: -54px; }
+  .raHomeRangeGrid { display: block; }
+  .raHomeRangeItem { margin-bottom: 44px; }
+  .raHomeRangeItem figure, .raHomeRangeItem--1 figure { aspect-ratio: 4 / 3; }
+  .raHomeCase { display: block; }
+  .raHomeCase > figure { aspect-ratio: 4 / 5; }
+  .raHomeCaseCopy { margin: -32px 16px 0; position: relative; padding: 42px 22px 48px; }
+  .raHomeCaseCopy dl div { grid-template-columns: 1fr; gap: 4px; }
+  .raHomeMaterial { display: block; padding-block: 76px; }
+  .raHomeMaterial > header { display: block; margin-bottom: 38px; }
+  .raHomeMaterial > header span { display: block; margin-bottom: 18px; }
+  .raHomeMaterial > figure { aspect-ratio: 4 / 5; }
+  .raHomeMaterial > div { margin-top: 28px; }
+  .raHomeProcessMedia { aspect-ratio: 4 / 3; }
+  .raHomeProcessHead { grid-template-columns: minmax(0,1fr); padding-block: 48px 32px; }
+  .raHomeProcessHead h2 { min-width: 0; font-size: clamp(2.1rem,10.8vw,4rem); }
+  .raHomeProcess ol { grid-template-columns: 1fr; padding-bottom: 56px; }
+  .raHomeProcess li { display: grid; grid-template-columns: 46px 1fr; padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--line-dark); }
+  .raHomeProcess li + li { padding-left: 0; }
+  .raHomeProcess li span { grid-row: 1 / 3; margin: 0; }
+  .raHomeProcess li p { grid-column: 2; }
+  .raHomeDecision { grid-template-columns: 1fr; gap: 50px; padding-block: 72px; }
+  .raHomeDecision > div { padding-right: 0; }
+
+  .raArchiveHead, .raArchitectInvite { grid-template-columns: 1fr; gap: 32px; padding-block: 58px; }
+  .raArchiveControls { position: static; grid-template-columns: 1fr auto; gap: 10px; }
+  .raArchiveControls > div { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 0 18px; overflow: visible; padding-bottom: 4px; }
+  .raArchiveControls button { min-width: 0; text-align: left; }
+  .raProjectRecord > a, .raProjectRecord:nth-child(even) > a { display: block; }
+  .raProjectRecord:nth-child(even) figure { order: 0; }
+  .raProjectRecord figure { aspect-ratio: 4 / 3; }
+  .raProjectRecordCopy { padding: 30px 0 42px; }
+  .raProjectRecordCopy dl { margin-top: 24px; }
+  .raProjectRecordCopy h2 { font-size: clamp(2.4rem,11vw,3.8rem); }
+
+  .raCaseHero > figure { aspect-ratio: 4 / 5; }
+  .raCaseHero > header { left: 16px; bottom: 186px; width: calc(100% - 32px); }
+  .raCaseHero > header h1 { font-size: clamp(3.4rem,15vw,5rem); }
+  .raCaseHero > header p { display: none; }
+  .raCaseHero > dl { grid-template-columns: 1fr; padding: 12px 16px; }
+  .raCaseHero > dl div, .raCaseHero > dl div + div { grid-template-columns: 98px 1fr; padding: 9px 0; border-right: 0; border-bottom: 1px solid var(--line-dark); }
+  .raCaseTask, .raCaseResult, .raMaterialRequest, .raAboutProof, .raQualityLedger { grid-template-columns: 1fr; gap: 32px; padding-block: 60px; }
+  .raCaseResult { background: transparent; }
+  .raCaseResult > div:last-child { padding: 24px 20px; background: var(--surface-cool); }
+  .raCaseTask dl div { grid-template-columns: 1fr; gap: 4px; }
+  .raCaseSpace { display: block; width: 100%; padding-bottom: 76px; }
+  .raCaseSpace > figure { aspect-ratio: 4 / 5; }
+  .raCaseSpace > div { margin: -28px 16px 0; position: relative; padding: 40px 22px 46px; }
+  .raCaseMaterial { padding-block: 72px; }
+  .raCaseMaterialBody { grid-template-columns: 1fr; }
+  .raCaseMaterialBody > figure { aspect-ratio: 4 / 5; }
+  .raCaseMaterialBody > dl { padding: 28px 22px; }
+  .raCaseNext { grid-template-columns: 110px 1fr auto; min-height: 128px; gap: 6px 16px; padding-right: 16px; }
+  .raCaseNext figure { grid-row: 1 / 4; }
+  .raCaseNext > span { grid-column: 2; }
+  .raCaseNext strong { grid-column: 2; font-size: 2rem; }
+  .raCaseNext small { grid-column: 2; }
+  .raCaseNext .arrow { grid-column: 3; grid-row: 1 / 4; }
+
+  .raMaterialLab { padding-block: 56px 74px; }
+  .raMaterialLab > header { grid-template-columns: 1fr; gap: 26px; margin-bottom: 40px; }
+  .raMaterials .materialWorkbench { display: flex; flex-direction: column; }
+  .raMaterials .materialWorkbench > nav { overflow: hidden; }
+  .raMaterials .materialWorkbench > nav button { flex: 1 1 33.333%; min-width: 0; padding-inline: 6px; font-size: .72rem; }
+  .raMaterials .materialOptions { min-height: 0; }
+  .raMaterials .materialWorkbench > figure { min-height: 540px; padding: 24px 18px; aspect-ratio: auto; }
+  .raMaterials .materialPreviewHeading { display: grid; gap: 8px; }
+  .raMaterials .materialPreviewHeading strong { text-align: left; }
+  .raMaterials .materialSpecimen { min-height: 300px; }
+  .raMaterials .materialSpecimen--compact,
+  .raMaterials .materialSpecimen--stone,
+  .raMaterials .materialSpecimen--quartz { min-height: 170px; }
+  .raMaterials .materialWorkbench > figure figcaption { grid-template-columns: 1fr; gap: 10px; }
+  .raMaterialChecks { display: block; padding-block: 72px; }
+  .raMaterialChecks > header { display: block; margin-bottom: 38px; }
+  .raMaterialChecks > header span { display: block; margin-bottom: 18px; }
+  .raMaterialChecks > figure { aspect-ratio: 4 / 5; }
+  .raMaterialChecks > div { margin-top: 30px; }
+
+  .raAboutLead > figure { aspect-ratio: 4 / 5; }
+  .raAboutLead > div { left: 16px; top: auto; bottom: 38px; width: calc(100% - 32px); transform: none; }
+  .raAboutLead h1 { font-size: clamp(3.2rem,13vw,4.7rem); }
+  .raAboutProof dl { grid-template-columns: 1fr; }
+  .raProcessJournal { padding-bottom: 78px; }
+  .raProcessJournal article, .raProcessJournal article:nth-child(even) { grid-template-columns: 44px 1fr; gap: 16px; }
+  .raProcessJournal article:nth-child(even) > div { grid-column: 2; }
+  .raProcessJournal article:nth-child(even) figure { grid-column: 1 / 3; grid-row: auto; }
+  .raProcessJournal article figure { grid-column: 1 / 3; aspect-ratio: 4 / 3; }
+  .raQualityLedger .actionLink { grid-column: 1; }
+
+  .raCalculatorHead { grid-template-columns: 1fr; gap: 28px; padding-block: 52px 38px; }
+  .raCalculatorWorkspace { width: 100%; padding-bottom: 64px; }
+  .raCalculator .estimatorWorkspace { display: flex; flex-direction: column; border-inline: 0; }
+  .raCalculator .liveEstimate { order: 0; height: auto; padding: 30px 20px; }
+  .raCalculator .liveEstimate dl { margin-top: 28px; }
+  .raCalculatorNotes { grid-template-columns: 1fr; padding-inline: 16px; }
+  .raCalculatorNotes article, .raCalculatorNotes article + article { padding: 22px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+
+  .raContactTop { grid-template-columns: 1fr; gap: 42px; padding-block: 58px 64px; }
+  .raContactTop dl div { grid-template-columns: 1fr; gap: 4px; }
+  .raContactVisit { width: 100%; }
+  .raContactVisit figure { aspect-ratio: 4 / 5; }
+  .raContactVisit > div { position: relative; width: calc(100% - 32px); margin: -30px 16px 0; padding: 28px 22px; }
+  .raContactVisit figcaption { right: 16px; max-width: calc(100% - 16px); }
+  .raContactForm, .raContactNext { grid-template-columns: 1fr; gap: 42px; padding-block: 76px; }
+  .raContactForm .contactForm { grid-template-columns: 1fr; }
+  .raContactForm .contactForm > label, .raContactForm .contactForm .formContext, .raContactForm .contactForm .submitButton, .raContactForm .contactForm .formSuccess { grid-column: 1; }
+
+  .siteFooter { padding: 38px 16px 18px; }
+  .footerLead { gap: 26px; padding-bottom: 28px; }
+  .footerLead h2 { max-width: 100%; font-size: clamp(2rem,10vw,2.6rem); overflow-wrap: anywhere; }
+  .footerGrid { gap: 26px; padding: 28px 0 32px; }
+  .footerGrid > div { min-width: 0; }
+  .footerGrid p, .footerGrid a { overflow-wrap: anywhere; }
+}
+
+@media (max-width: 760px) {
+  .raHomeThesis { margin-top: 0; padding-top: 68px; }
+  .raHomeThesis > header { display: block; }
+  .raHomeThesis > header h2 { margin-top: 18px; font-size: clamp(2.55rem,11.5vw,3.45rem); }
+  .raHomeThesis > header p { margin-top: 22px; }
+  .raHomeThesisEvidence { margin-top: 38px; }
+  .raPlanIntro { min-height: 270px; padding: 24px 20px; }
+  .raPlanPair { grid-template-columns: 1fr; }
+  .raPlan + .raPlan { border-left: 0; border-top: 1px solid var(--line-dark); }
+  .raPlan { padding: 20px; }
+  .raPlanCanvas { height: 280px; }
+  .raHomeThesisLedger { width: 100%; grid-template-columns: 1fr; }
+  .raHomeRange { padding-block: 48px 56px; }
+  .raHomeRange::before { margin-top: -48px; }
+  .raHomeRange > header { display: block; margin-bottom: 34px; padding-inline: 10px; }
+  .raHomeRange > header > span { display: block; margin-bottom: 16px; }
+  .raHomeRange > header h2 { max-width: 330px; margin: 0 0 18px; font-size: clamp(2.25rem,10.2vw,2.65rem); line-height: .96; letter-spacing: -.035em; }
+  .raHomeRange > header p { max-width: 335px; margin: 0; color: #c8cfcb; font-size: .98rem; line-height: 1.52; }
+  .raHomeRangeGrid { display: block; border-top: 1px solid var(--line-dark); }
+  .raHomeRangeItem { margin: 0; border-bottom: 1px solid var(--line-dark); }
+  .raHomeRangeItem a { display: grid; grid-template-columns: clamp(88px,29vw,112px) minmax(0,1fr); gap: clamp(12px,4vw,16px); align-items: center; padding: 18px 10px; }
+  .raHomeRangeItem figure, .raHomeRangeItem--1 figure { width: clamp(88px,29vw,112px); height: auto; aspect-ratio: 3 / 4; }
+  .raHomeRangeItem a > div { min-width: 0; padding: 0; }
+  .raHomeRangeItem h3 { margin: 7px 0 8px; font-size: 1.55rem; line-height: 1; }
+  .raHomeRangeItem p { font-size: .88rem; line-height: 1.45; }
+  .raHomeRangeItem .arrow { display: none; }
+  .raHomeCase { display: block; grid-template-columns: none; padding: 56px 16px 64px; background: var(--surface-cool); }
+  .raHomeCase > figure { width: 100%; margin: 0; aspect-ratio: 4 / 3; }
+  .raHomeCase figcaption { right: 0; max-width: 100%; padding: 11px 14px; }
+  .raHomeCaseCopy { position: relative; margin: 0; padding: 34px 20px 40px; background: var(--paper); }
+  .raHomeCaseCopy h2 { margin: 16px 0 18px; font-size: 2.55rem; line-height: .96; }
+  .raHomeCaseCopy dl { margin-block: 28px; }
+  .raHomeCaseCopy dl div { grid-template-columns: 1fr; gap: 5px; padding-block: 14px; }
+  .raMaterialStory { padding-block: 72px 82px; }
+  .raMaterialStory > header { display: block; margin-bottom: 34px; }
+  .raMaterialStory > header span { display: block; margin-bottom: 18px; }
+  .raMaterialStory > header p { margin-top: 20px; }
+  .raMaterialStoryList article, .raMaterialStoryList article:nth-child(even) { display: flex; flex-direction: column; gap: 28px; align-items: stretch; padding-block: 36px; }
+  .raMaterialStoryList article:nth-child(even) figure { order: 0; }
+  .raMaterialStoryList figure { aspect-ratio: 4 / 3; }
+  .choiceList--types { grid-template-columns: 1fr; }
+  .choiceList--types > button, .choiceList--types > button:last-child { grid-column: auto; min-height: 132px; }
+  .raProjectRecord > a, .raProjectRecord:nth-child(even) > a { display: flex; flex-direction: column; }
+  .raProjectRecord figure, .raProjectRecord:nth-child(even) figure, .raProjectRecord:nth-child(3n) figure { order: 0; aspect-ratio: 4 / 3; }
+  .raProjectRecordCopy, .raProjectRecord:nth-child(even) .raProjectRecordCopy { order: 1; padding: 30px 10px 48px; }
+  .raProjectRecord figcaption { top: 0; bottom: auto; }
+  .raProjectRecord + .raProjectRecord { margin-top: 32px; padding-top: 24px; border-top: 0; }
+  .footerLead { grid-template-columns: 1fr; }
+  .footerLead h2 { max-width: 310px; overflow-wrap: normal; word-break: normal; }
+  .footerGrid { grid-template-columns: 1fr 1fr; }
+  .footerGrid > div:last-child { grid-column: 1 / 3; }
+
+  /* Route-wide mobile integrity: normal flow, stable reading order and touch-safe controls. */
+  .raCaseHero { display: grid; }
+  .raCaseHero > figure { grid-row: 1; aspect-ratio: 4 / 5; }
+  .raCaseHero > header { position: absolute; left: 20px; right: 20px; bottom: 176px; width: auto; }
+  .raCaseHero > header h1 { font-size: clamp(2.85rem,13vw,3.65rem); line-height: .94; }
+  .raCaseHero > dl { position: relative; inset: auto; grid-row: 2; padding: 12px 20px; }
+  .raCaseSpace > div { margin: 0 16px; }
+  .raCaseMaterial > header, .raCaseResult, .raMaterialRequest, .raAboutProof, .raQualityLedger, .raCalculatorHead, .raContactTop, .raContactForm, .raContactNext { padding-inline: 4px; }
+  .raArchiveControls button, .raArchiveEmpty button, .raMaterials .materialWorkbench > nav button, .menuButton, .estimateSummary button { min-height: 44px; }
+  .raMaterials .materialWorkbench > nav { overflow: hidden; }
+  .raMaterials .materialWorkbench > nav button { flex: 1 1 33.333%; min-width: 0; }
+}
+
+/* Readability and interaction floor: labels remain editorial, never microscopic. */
+.sectionLabel,
+.eyebrow,
+.footerLabel { font-size: .8rem; line-height: 1.35; letter-spacing: .1em; }
+.brand span { font-size: .72rem; line-height: 1.2; }
+.footerBottom { font-size: .8rem; }
+.actionLink { min-height: 52px; font-size: .9rem; }
+
+.raHome :is(header, section, div) > span,
+.raProjects :is(header, section, div) > span,
+.raCase :is(header, section, div) > span,
+.raMaterials :is(header, section, div) > span,
+.raAbout :is(header, section, div) > span,
+.raCalculator :is(header, section, div) > span,
+.raContacts :is(header, section, div) > span { font-size: .8rem; line-height: 1.35; letter-spacing: .1em; }
+
+.raHome :is(dt, figcaption, small),
+.raProjects :is(dt, figcaption, small),
+.raCase :is(dt, figcaption, small),
+.raMaterials :is(dt, figcaption, small),
+.raAbout :is(dt, figcaption, small),
+.raCalculator :is(dt, figcaption, small),
+.raContacts :is(dt, figcaption, small) { font-size: .8rem; line-height: 1.4; }
+
+.raArchiveControls :is(p, span),
+.raArchiveControls button,
+.raMaterials .materialWorkbench button,
+.raMaterials .materialOptions > a,
+.raCalculator :is(button, legend),
+.raContacts :is(button, label > span) { font-size: .88rem; line-height: 1.35; }
+.menuButton { font-size: .9rem; }
+.raMaterials .materialWorkbench aside dt,
+.raCalculator :is(.estimatorTopline, .numberField > span:first-child, .estimateSummary dt),
+.raPlan header b { font-size: .8rem; line-height: 1.35; }
+.raCalculator .choiceList > button i { font-size: .82rem; line-height: 1.35; }
+.raPlanCanvas em,
+.demoDisclaimer { font-size: .8rem; }
+
+.raHomeRange > header { padding-inline: 24px; }
+.raHomeRangeItem a > div { padding: 24px 24px 26px; }
+.raCardAction,
+.raProjectRecordAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-width: 200px;
+  min-height: 50px;
+  margin-top: 24px;
+  padding: 12px 15px;
+  border: 1px solid currentColor;
+  font-size: .9rem !important;
+  font-weight: 700;
+  line-height: 1.2 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+.raHomeRangeItem .raCardAction .arrow { position: relative; top: auto; right: auto; display: inline-block; }
+.raHomeRangeItem a:hover .raCardAction,
+.raHomeRangeItem a:focus-visible .raCardAction { color: var(--ink); background: #fff; }
+.raProjectRecordAction { align-self: flex-start; color: var(--ink); }
+.raProjectRecord > a:hover .raProjectRecordAction,
+.raProjectRecord > a:focus-visible .raProjectRecordAction { color: #fff; border-color: var(--ink); background: var(--ink); }
+
+@media (max-width: 760px) {
+  .raHomeRange > header { padding-inline: 20px; }
+  .raHomeRangeItem a { padding-inline: 20px; }
+  .raHomeRangeItem a > div { padding: 0; }
+  .raCardAction { width: 100%; min-width: 0; min-height: 44px; margin-top: 14px; padding: 10px; gap: 8px; font-size: .88rem !important; white-space: nowrap; }
+  .raHomeRangeItem p { font-size: .95rem; }
+  .raProjectRecordCopy,
+  .raProjectRecord:nth-child(even) .raProjectRecordCopy { padding-inline: 16px; }
+  .raProjectRecordAction { width: 100%; min-width: 0; }
+}

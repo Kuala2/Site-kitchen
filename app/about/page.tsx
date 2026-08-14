@@ -1,10 +1,28 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import Image from 'next/image';
-import {InteriorHero} from '@/components/InteriorHero';
+import { ActionLink } from '@/components/DesignSystem';
 
-export const metadata:Metadata={title:'Как начинается мебельный проект',description:'Шесть этапов, которые сайт может показать реальному производителю мебели на заказ.',alternates:{canonical:'/about/'}};
+export const metadata: Metadata = { title: 'Процесс и производство', description: 'От первого разговора до чистового монтажа мебели.', alternates: { canonical: '/about/' } };
 
-const steps=[['Разговор о задаче','Комната, привычки, ограничения и то, что сейчас мешает в хранении.'],['Замер пространства','Геометрия стен, углы, выводы, открывания и реальные проходы.'],['Планировка и хранение','Объёмы, ежедневные маршруты, техника и доступ к вещам.'],['Материалы','Фасады, корпуса, профили, стекло и поверхности проверяются при реальном свете.'],['Согласование','Чертёж, комплектация, материалы и привязки собираются в один понятный документ.'],['Изготовление и монтаж','Для реального производителя сайт может показать этот этап после подключения его сроков, гарантий и процессов.']];
-const stepImages=['/images/room-office-warm.jpg','/images/workshop.jpg','/images/room-living-detail.jpg','/images/editorial-12.jpg','/images/room-bedroom-wood.jpg','/images/editorial-11.jpg'];
+const chapters = [
+  ['Диалог и эскиз', 'Комната, привычки и ограничения превращаются в рабочую гипотезу.', '/images/room-office-warm.jpg'],
+  ['Архитектурный замер', 'Фиксируем геометрию стен, углы, выводы, открывания и проходы.', '/images/room-office.jpg'],
+  ['Проект и материалы', 'Сводим внутренние секции, фасады, камень, профиль и свет в одну спецификацию.', '/images/room-living-wide.jpg'],
+  ['Производство и контроль', 'Проверяем размеры, рисунок материала и ключевые узлы до выезда на объект.', '/images/editorial-11.jpg'],
+  ['Чистовой монтаж', 'Собираем мебель, сводим примыкания и проверяем работу механизмов.', '/images/room-living-detail.jpg'],
+];
 
-export default function About(){return <div className="page immersivePage aboutPage"><InteriorHero image="/images/room-office-warm.jpg" alt="Тёплая рабочая зона, встроенная в интерьер" eyebrow="Как начинается индивидуальный проект" title="Сначала пространство. Потом мебель." lead="Одна последовательность работает для кухни, гардеробной, гостиной и рабочего места: задача, точная геометрия, хранение и только затем материал." note="06 понятных этапов" position="center 52%"/><section className="aboutOpening section"><figure><Image src="/images/workshop.jpg" alt="Рабочий стол с образцами древесины" fill sizes="(max-width: 800px) 100vw, 48vw"/></figure><div><p className="eyebrow">Структура вместо обещаний</p><h2>Процесс должен быть виден так же ясно, как готовый интерьер</h2><p>Эта демонстрация не придумывает производство, сроки или гарантии. Она показывает, как реальный мебельный бренд может спокойно объяснить путь от первого разговора до монтажа.</p><ol className="processIndex" aria-label="Логика работы"><li>01 Разговор</li><li>02 Замер</li><li>03 Планировка</li><li>04 Материалы</li><li>05 Согласование</li><li>06 Монтаж</li></ol></div></section><section className="processChapters">{steps.map(([title,text],index)=><article className="processChapter" key={title}><figure><Image src={stepImages[index]} alt="Интерьерный и рабочий референс этапа проекта" fill sizes="(max-width: 800px) 100vw, 55vw"/></figure><div><span>{String(index+1).padStart(2,'0')}</span><p className="eyebrow">Этап проекта</p><h2>{title}</h2><p>{text}</p></div></article>)}</section><section className="aboutDemoNote section"><p className="eyebrow">О демонстрационной версии</p><h2>Здесь нет вымышленных заказчиков и производственных обещаний</h2><p>«СЛОЙ 52» — вымышленный бренд и портфолио разработчика. Реальному производителю понадобятся собственные проекты, сроки, гарантии, контакты и процессы. Кухонный расчёт здесь служит только для проверки интерфейса.</p></section></div>}
+export default function About() {
+  return <article className="raAbout">
+    <section className="raAboutLead">
+      <figure><Image src="/images/room-office-warm.jpg" alt="Точно собранная встроенная рабочая система из эмали и дерева" fill priority sizes="100vw" /></figure>
+      <div><span>Процесс и контроль</span><h1>Точность начинается до производства.</h1><p>Готовый результат зависит от того, насколько последовательно проверены исходные данные, материалы и узлы.</p></div>
+    </section>
+
+    <section className="raAboutProof raFrame"><header><span>Принцип работы</span><h2>Контролируем не обещание, а каждый переход.</h2></header><div><p>Один миллиметр важен только тогда, когда он привязан к чертежу, фактической стене и понятной ответственности между проектом, производством и монтажом.</p><dl><div><dt>1 мм</dt><dd>контролируемая точность примыкания</dd></div><div><dt>1 документ</dt><dd>чертёж, материалы и комплектация в одной версии</dd></div></dl></div></section>
+
+    <section className="raProcessJournal raFrame" data-process-progress><header><span>Журнал проекта</span><h2>Пять точек, где решение становится точнее.</h2></header><div>{chapters.map(([title, text, image], index) => <article key={title}><span>{String(index + 1).padStart(2, '0')}</span><div><h3>{title}</h3><p>{text}</p></div><figure data-parallax><Image src={image} alt={`Этап проекта: ${title}`} fill sizes="(max-width: 760px) 100vw, 38vw" /></figure></article>)}</div></section>
+
+    <section className="raQualityLedger raFrame"><header><span>Перед передачей объекта</span><h2>Проверяем не только фасад.</h2></header><ul><li>соответствие чертежу и спецификации;</li><li>рисунок шпона и направление текстуры;</li><li>геометрию зазоров, открываний и примыканий;</li><li>работу механизмов и встроенного света;</li><li>чистоту монтажа и передачу готового объекта.</li></ul><ActionLink href="/contacts/" variant="line">Обсудить текущий этап</ActionLink></section>
+  </article>;
+}

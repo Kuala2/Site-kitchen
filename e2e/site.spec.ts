@@ -1,24 +1,88 @@
-import {test,expect} from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-const routes=['/','/projects','/projects/linen-light','/projects/walnut-line','/projects/chalk-frame','/projects/olive-island','/projects/ash-corner','/projects/graphite-block','/projects/quiet-wardrobe','/projects/living-contour','/projects/work-niche','/calculator','/materials','/about','/contacts','/missing-page'];
-for(const route of routes)test(`прямой маршрут ${route}`,async({page})=>{await page.goto(route);await expect(page.locator('h1')).toHaveCount(1);await page.reload();await expect(page.locator('main')).toBeVisible()});
+const routes = [
+  '/', '/projects', '/projects/linen-light', '/projects/walnut-line',
+  '/projects/chalk-frame', '/projects/olive-island', '/projects/ash-corner',
+  '/projects/graphite-block', '/projects/quiet-wardrobe',
+  '/projects/living-contour', '/projects/work-niche', '/calculator',
+  '/materials', '/about', '/contacts', '/missing-page',
+];
 
-test('фильтры комнаты и решения сохраняются в URL',async({page})=>{await page.goto('/projects');await page.getByRole('button',{name:'Угловые'}).click();await expect(page).toHaveURL(/solution=corner/);await expect(page.locator('.projectCard')).toHaveCount(2);await page.getByRole('button',{name:'Гардеробные'}).click();await expect(page).toHaveURL(/room=wardrobe/);await expect(page.locator('.projectCard')).toHaveCount(0);await page.getByRole('button',{name:'Все решения'}).click();await expect(page.locator('.projectCard')).toHaveCount(1)});
+for (const route of routes) {
+  test(`прямой маршрут ${route}`, async ({ page }) => {
+    await page.goto(route);
+    await expect(page.locator('h1')).toHaveCount(1);
+    await page.reload();
+    await expect(page.locator('main')).toBeVisible();
+  });
+}
 
-test('главная показывает три hero-слайда и шесть комнат',async({page})=>{await page.goto('/');await expect(page.locator('.heroSlide')).toHaveCount(3);await expect(page.locator('.roomCard')).toHaveCount(6);await expect(page.getByRole('heading',{name:'Мебель по комнатам'})).toBeVisible()});
+test('главная показывает актуальный hero и диапазон решений', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.raHomeHero')).toBeVisible();
+  await expect(page.locator('.raHomeRangeItem')).toHaveCount(3);
+  await expect(page.getByRole('heading', { name: /Точность/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Смотреть проекты' })).toHaveAttribute('href', '/projects/');
+});
 
-test('некухонный концепт ведёт к обсуждению, а не в расчёт кухни',async({page})=>{await page.goto('/projects/quiet-wardrobe');await expect(page.getByRole('link',{name:'Обсудить концепт'})).toHaveAttribute('href',/contacts/);await expect(page.getByRole('link',{name:'Взять за основу'})).toHaveCount(0)});
+test('фильтр проектов сохраняется в URL и меняет выдачу', async ({ page }) => {
+  await page.goto('/projects');
+  await page.getByRole('button', { name: 'Гардеробные' }).click();
+  await expect(page).toHaveURL(/room=wardrobe/);
+  await expect(page.locator('.raProjectRecord')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Все' }).click();
+  await expect(page).not.toHaveURL(/room=/);
+  await expect(page.locator('.raProjectRecord')).toHaveCount(9);
+});
 
-test('материалы ведут в расчёт с независимыми A/B и без крупного плана',async({page})=>{await page.goto('/materials');await expect(page.getByText('Сейчас редактируется вариант A.')).toBeVisible();await expect(page.getByRole('tab',{name:'Крупный план'})).toHaveCount(0);await page.getByRole('button',{name:/Тёмный шпон/}).click();await page.getByRole('button',{name:/Кварцевый агломерат/}).click();await page.getByRole('button',{name:/Скоба/}).click();await page.getByRole('tab',{name:'Вариант B'}).click();await expect(page.getByRole('button',{name:/Тёмный шпон/})).not.toHaveAttribute('aria-pressed','true');await page.getByRole('button',{name:/Матовая окраска/}).click();await page.getByRole('link',{name:'Использовать B в расчёте'}).click();await expect(page).toHaveURL(/facade=paint/);await expect(page).toHaveURL(/handle=bar/)});
+test('лаборатория материалов переключает группы и передаёт выбор в расчёт', async ({ page }) => {
+  await page.goto('/materials');
+  await page.getByRole('button', { name: 'Столешницы' }).click();
+  await page.getByRole('button', { name: 'Искусственный камень' }).click();
+  await expect(page.locator('.materialPreviewHeading strong')).toHaveText('Искусственный камень');
+  await page.getByRole('link', { name: /Использовать в расчёте/ }).click();
+  await expect(page).toHaveURL(/\/calculator\//);
+  await expect(page).toHaveURL(/worktop=/);
+});
 
-test('пять шагов, зоны и проекции используют одну конфигурацию',async({page,context})=>{await context.grantPermissions(['clipboard-read','clipboard-write']);await page.goto('/calculator');await page.getByRole('button',{name:'Угловая'}).click();await page.getByRole('button',{name:'Продолжить'}).click();await expect(page.getByRole('heading',{name:'Расположение зон'})).toBeVisible();await page.locator('[aria-label="Поставить Холодильник: Стена B, модуль 3"]').click();await page.getByRole('tab',{name:'План сверху'}).click();await expect(page.locator('.configPreview > .diagram')).toHaveAttribute('data-layout','corner');await page.getByRole('tab',{name:'Развёртки стен'}).click();await expect(page.locator('.wallNavigator')).toBeVisible();await expect(page.locator('.configPreview > .kitchenFront')).toBeVisible();await page.getByRole('button',{name:'Продолжить'}).click();await page.getByRole('button',{name:/Тёмный шпон/}).click();await page.getByRole('button',{name:'Продолжить'}).click();await page.getByText('Подсветка',{exact:true}).click();await page.getByText('Организация ящиков',{exact:true}).click();await page.getByRole('button',{name:'Продолжить'}).click();await expect(page.getByRole('heading',{name:'Черновик расчёта'})).toBeVisible();await page.getByRole('button',{name:'Скопировать ссылку'}).click();const link=await page.evaluate(()=>navigator.clipboard.readText());await expect(link).toContain('fridge=b%3A2');await page.goto(link);await expect(page.locator('.configPreview > .diagram')).toHaveAttribute('data-layout','corner')});
+test('калькулятор проходит пять шагов и сохраняет параметры в URL', async ({ page }) => {
+  await page.goto('/calculator');
+  await page.getByRole('button', { name: /Гардеробная/ }).click();
+  await page.getByRole('button', { name: /Продолжить/ }).click();
+  await page.getByRole('button', { name: 'Г-образная' }).click();
+  await page.getByLabel('Ширина / общая длина').fill('4100');
+  await page.getByRole('button', { name: /Продолжить/ }).click();
+  await page.getByRole('button', { name: /Натуральный шпон/ }).click();
+  await page.getByRole('button', { name: /Продолжить/ }).click();
+  await page.getByRole('button', { name: /Продолжить/ }).click();
+  await expect(page.getByRole('heading', { name: 'Ориентир готов' })).toBeVisible();
+  await expect(page.locator('.estimateSummary')).toContainText('Гардеробная · Г-образная');
+  await expect(page).toHaveURL(/type=wardrobe/);
+  await expect(page).toHaveURL(/width=4100/);
+});
 
-test('все формы строят корректные проекции',async({page})=>{for(const query of ['layout=straight&a=3000&facade=paint&top=compact&handle=profile','layout=corner&a=3000&b=2400&facade=frame&top=quartz&handle=bar','layout=u&a=3000&b=2400&c=2200&facade=dark-veneer&top=stone&handle=knob','layout=island&a=3000&islandLength=1800&facade=paint&top=compact&handle=profile']){await page.goto(`/calculator?${query}`);await expect(page.locator('.configPreview > .diagram')).toBeVisible();await page.getByRole('tab',{name:'Развёртки стен'}).click();await expect(page.locator('.configPreview > .kitchenFront')).toBeVisible()}});
+test('контактная форма валидируется локально и ничего не отправляет', async ({ page }) => {
+  const mutations: string[] = [];
+  page.on('request', (request) => {
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method())) mutations.push(request.url());
+  });
+  await page.goto('/contacts');
+  await page.getByRole('button', { name: /Подготовить запрос/ }).click();
+  await expect(page.locator('input[name="name"]')).toHaveAttribute('aria-invalid', 'true');
+  await page.getByLabel('Имя').fill('Тест');
+  await page.locator('input[name="contact"]').fill('+7 900 000-00-00');
+  await page.getByRole('button', { name: /Подготовить запрос/ }).click();
+  await expect(page.getByRole('status')).toContainText('Основные данные заполнены');
+  expect(mutations).toEqual([]);
+});
 
-test('оснащение отделяет услуги от модулей кухни',async({page})=>{await page.goto('/calculator?layout=island&a=3000&islandLength=1800&facade=frame&top=quartz&handle=knob');await page.getByRole('button',{name:/Оснащение/}).click();await expect(page.getByText('Отдельные услуги',{exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Доставка и монтаж'})).toBeVisible();await expect(page.locator('.services')).toContainText('Доставка');await expect(page.locator('.services')).toContainText('Монтаж');await page.getByRole('tab',{name:'Развёртки стен'}).click();await expect(page.locator('.configPreview > .kitchenFront')).toBeVisible()});
-
-test('результат и контакты получают выбранную конфигурацию',async({page})=>{const query='layout=corner&a=3000&b=2400&facade=frame&top=quartz&handle=bar&options=uppers,lights,installation&fridge=a%3A0&sink=a%3A2&cooktop=b%3A1';await page.goto(`/calculator?${query}`);await page.getByRole('button',{name:/Черновик/}).click();const result=page.locator('.result');await expect(result.getByText('Верхние шкафы',{exact:true})).toBeVisible();await expect(result.getByText('Подсветка',{exact:true})).toBeVisible();await expect(result.getByText('Монтаж',{exact:true})).toBeVisible();await expect(result.getByText('Не входит',{exact:true})).toBeVisible();await page.getByRole('link',{name:'Обсудить расчёт'}).click();await expect(page.getByRole('heading',{name:'Параметры уже рядом'})).toBeVisible();await expect(page.getByText('Скоба',{exact:true})).toBeVisible();await expect(page.getByRole('link',{name:'Вернуться к расчёту'})).toHaveAttribute('href',/fridge=a%3A0/)});
-
-test('форма контактов не отправляет персональные данные',async({page})=>{const mutations:string[]=[];page.on('request',request=>{if(['POST','PUT','PATCH','DELETE'].includes(request.method()))mutations.push(request.url())});await page.goto('/contacts');await page.getByLabel('Имя').fill('Тест');await page.getByRole('textbox',{name:/Телефон/}).fill('почта');await page.getByRole('button',{name:'Показать, как отправится обращение'}).click();await expect(page.getByText(/данные очищены/)).toBeVisible();expect(mutations).toEqual([])});
-
-test('мобильное меню и стрелки развёрток доступны с клавиатуры',async({page,isMobile})=>{test.skip(!isMobile);await page.goto('/');const menu=page.getByRole('button',{name:'Меню'});await menu.click();await page.keyboard.press('Escape');await expect(menu).toBeFocused();await page.goto('/calculator');await page.getByRole('tab',{name:'Развёртки стен'}).click();await expect(page.locator('.wallNavigator')).toBeVisible()});
+test('мобильное меню закрывается Escape и возвращает фокус', async ({ page, isMobile }) => {
+  test.skip(!isMobile);
+  await page.goto('/');
+  const menu = page.locator('.menuButton');
+  await menu.click();
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  await expect(menu).toBeFocused();
+});

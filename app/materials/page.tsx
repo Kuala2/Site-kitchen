@@ -1,10 +1,19 @@
-import type {Metadata} from 'next';
-import Image from 'next/image';
-import {MaterialsExplorer} from '@/components/MaterialsExplorer';
-import {InteriorHero} from '@/components/InteriorHero';
+import type { Metadata } from 'next';
+import { MaterialsExplorer } from '@/components/MaterialsExplorer';
+import { MaterialScrollStory } from '@/components/MaterialScrollStory';
+import { ActionLink } from '@/components/DesignSystem';
 
-export const metadata:Metadata={title:'Лаборатория мебельных материалов',description:'Сравнение фасадов, корпусов, столешниц, ручек, профилей, стекла и деревянных поверхностей.',alternates:{canonical:'/materials/'}};
+export const metadata: Metadata = { title: 'Лаборатория материалов', description: 'Фасады, столешницы и фурнитура в масштабе мебельной композиции.', alternates: { canonical: '/materials/' } };
 
-const groups=['Фасады','Корпуса','Столешницы','Ручки и профили','Стекло','Дерево и шпон','Матовые поверхности'];
+export default function Materials() {
+  return <article className="raMaterials">
+    <section className="raMaterialLab raFrame">
+      <header><div><span>Лаборатория материалов</span><h1>Материал проверяют в масштабе дома.</h1></div><p>Сравнивайте фасады, столешницы и фурнитуру рядом с крупной плоскостью, светом и соседними фактурами.</p></header>
+      <MaterialsExplorer />
+    </section>
 
-export default function Materials(){return <div className="page immersivePage materialsPage"><InteriorHero image="/images/editorial-12.jpg" alt="Светлый шпон, камень и рабочая зона крупным планом" eyebrow="Поверхности и фурнитура" title="Материал читается только рядом со светом и объёмом" lead="Шпон, окраска, камень, стекло и профиль меняют друг друга. Поэтому сначала смотрим на целую сцену, затем — на образец." note="шпон · камень · профиль" position="center 56%"/><section className="materialEditorial section"><div className="materialEditorialCopy"><p className="eyebrow">Не палитра, а система</p><h2>Один материал — три разных впечатления</h2><p>На большой плоскости рисунок дерева звучит тише, в нише свет становится частью отделки, а тонкий профиль может собрать разные поверхности в единую линию.</p><div className="materialGroupRail" aria-label="Категории материалов">{groups.map(group=><span key={group}>{group}</span>)}</div></div><div className="materialEditorialPhotos"><figure><Image src="/images/room-living-detail.jpg" alt="Подсвеченная мебельная ниша с тёмной отделкой" fill sizes="(max-width: 800px) 100vw, 42vw"/><figcaption>свет внутри композиции</figcaption></figure><figure><Image src="/images/room-bedroom-wood.jpg" alt="Белая встроенная мебель рядом с деревянной панелью" fill sizes="(max-width: 800px) 100vw, 30vw"/><figcaption>эмаль рядом с деревом</figcaption></figure></div></section><section className="materialWorkbench section"><div className="materialLabNote"><p className="eyebrow">Интерактивная лаборатория</p><h2>Соберите два сочетания и сравните рядом</h2><p>Экран передаёт общее впечатление. Реальный цвет, фактуру и стык проверяют по физическим образцам при освещении комнаты.</p></div><MaterialsExplorer/></section></div>}
+    <MaterialScrollStory />
+
+    <section className="raMaterialRequest raFrame"><div><span>Следующий шаг</span><h2>Соберём набор материалов для вашего пространства.</h2></div><div><p>На встрече образцы смотрят рядом и при разном свете. Экран остаётся только первым ориентиром.</p><ActionLink href="/contacts/" variant="line">Записаться на просмотр</ActionLink></div></section>
+  </article>;
+}

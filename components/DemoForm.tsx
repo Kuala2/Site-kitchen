@@ -1,28 +1,37 @@
 'use client';
 
-import Link from 'next/link';
-import {FormEvent,useMemo,useState} from 'react';
-import {useSearchParams} from 'next/navigation';
-import {calculate,dimensionSummary,parse,selectedOptionLabels,serialize} from '@/lib/configurator';
-import {facades,countertops,handles} from '@/data/materials';
-import {projects,roomNames} from '@/data/projects';
+import { FormEvent, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { projects, roomNames } from '@/data/projects';
+import { siteConfig } from '@/data/site';
 
-const layoutNames={straight:'Прямая',corner:'Угловая',u:'П-образная',island:'С островом'} as const;
-type ContactKind='Телефон'|'Telegram'|'Email';
+export function DemoForm() {
+  const params = useSearchParams();
+  const concept = projects.find((project) => project.slug === params?.get('concept'));
+  const estimate = params?.get('estimate');
+  const [channel, setChannel] = useState('Телефон');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sent, setSent] = useState(false);
 
-export function DemoForm(){
-  const [sent,setSent]=useState(false),[errors,setErrors]=useState<Record<string,string>>({}),[kind,setKind]=useState<ContactKind>('Телефон'),[submitted,setSubmitted]=useState<{name:string;contact:string;room:string}|null>(null);
-  const params=useSearchParams();
-  const hasKitchenConfig=['layout','a','facade','top'].some(key=>params.has(key));
-  const config=useMemo(()=>hasKitchenConfig?parse(params.toString()):null,[params,hasKitchenConfig]);
-  const concept=projects.find(project=>project.slug===params.get('concept'));
-  const result=config?calculate(config):null;
-  function submit(event:FormEvent<HTMLFormElement>){event.preventDefault();const form=new FormData(event.currentTarget),name=String(form.get('name')||'').trim(),contact=String(form.get('contact')||'').trim(),room=String(form.get('room')||'').trim();const next:Record<string,string>={};if(!name)next.name='Укажите, как к вам обращаться.';if(!contact)next.contact=`Укажите ${kind.toLowerCase()}.`;if(Object.keys(next).length){setErrors(next);setSent(false);return;}setErrors({});setSubmitted({name,contact,room:roomNames[room as keyof typeof roomNames]||room});event.currentTarget.reset();setSent(true)}
-  const contactLabel=kind==='Email'?'Email':kind==='Telegram'?'Telegram':'Телефон';
-  return <div><form className="contactForm" noValidate onSubmit={submit}>{config&&result&&<ConfigSummary config={config} low={result.low} high={result.high}/>} {!config&&<StartContext concept={concept}/>}<p className="notice">Демо-режим: данные не сохраняются и никуда не отправляются.</p><label>Имя<input name="name" required autoComplete="name" aria-invalid={!!errors.name} aria-describedby={errors.name?'name-error':undefined} onInput={()=>setErrors(current=>({...current,name:''}))}/><small className="fieldHint">Достаточно имени или удобного обращения.</small>{errors.name&&<small className="fieldError" id="name-error">{errors.name}</small>}</label><label>Предпочтительный канал<select value={kind} onChange={event=>setKind(event.target.value as ContactKind)}><option>Телефон</option><option>Telegram</option><option>Email</option></select></label><label>{contactLabel}<input name="contact" required inputMode={kind==='Email'?'email':'text'} autoComplete={kind==='Email'?'email':'tel'} placeholder={kind==='Email'?'name@example.com':kind==='Telegram'?'@username':'Номер или удобный формат'} aria-invalid={!!errors.contact} aria-describedby={errors.contact?'contact-error':undefined} onInput={()=>setErrors(current=>({...current,contact:''}))}/><small className="fieldHint">Мы показываем только локальный сценарий — контакт не попадёт в URL или storage.</small>{errors.contact&&<small className="fieldError" id="contact-error">{errors.contact}</small>}</label><label>Комната или тип мебели<select name="room" defaultValue={concept?.category||params.get('room')||'kitchen'}>{Object.entries(roomNames).map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label><label>Комментарий <small>необязательно</small><textarea name="message" rows={5} placeholder="Что важно в комнате или в нынешнем хранении?"/></label><div className="demoUpload"><span>Фото помещения</span><input type="file" disabled aria-describedby="upload-hint"/><small id="upload-hint">Загрузка отключена в демо. В рабочей версии здесь потребуется отдельный backend и безопасное файловое хранилище.</small></div><button className="button" type="submit">Показать, как отправится обращение</button>{sent&&submitted&&<section className="demoResult" aria-live="polite"><strong>Локальная демонстрация готова</strong><p>В реальном проекте были бы переданы: {submitted.name}, {kind.toLowerCase()} {submitted.contact}, задача для комнаты «{submitted.room}»{config?', а также выбранная конфигурация кухни':concept?`, концепт «${concept.name}»`:''}. Здесь данные очищены и не отправлялись.</p></section>}</form><p className="contactNote">В рабочей версии на этом месте подключаются согласие, политика обработки данных и передача обращения в CRM.</p></div>;
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const next: Record<string, string> = {};
+    if (!String(data.get('name') || '').trim()) next.name = 'Укажите, как к вам обращаться.';
+    if (!String(data.get('contact') || '').trim()) next.contact = `Укажите ${channel.toLowerCase()}.`;
+    setErrors(next);
+    setSent(!Object.keys(next).length);
+  }
+
+  return <form className="contactForm" noValidate onSubmit={submit}>
+    {(concept || estimate) && <div className="formContext"><p className="sectionLabel">Контекст уже приложен</p><h3>{concept ? concept.name : 'Предварительный расчёт'}</h3><p>{concept ? `${concept.solution} · ${concept.dimensions}` : 'Параметры сохранены в ссылке и будут доступны при возвращении к расчёту.'}</p></div>}
+    <label><span>Имя</span><input name="name" autoComplete="name" aria-invalid={!!errors.name} onInput={() => setErrors((value) => ({ ...value, name: '' }))} />{errors.name && <small>{errors.name}</small>}</label>
+    <label><span>Предпочтительный канал</span><select value={channel} onChange={(event) => setChannel(event.target.value)}><option>Телефон</option><option>Telegram</option><option>Email</option></select></label>
+    <label><span>{channel}</span><input name="contact" autoComplete={channel === 'Email' ? 'email' : 'tel'} placeholder={channel === 'Email' ? 'name@example.com' : channel === 'Telegram' ? '@username' : '+7 900 000-00-00'} aria-invalid={!!errors.contact} onInput={() => setErrors((value) => ({ ...value, contact: '' }))} />{errors.contact && <small>{errors.contact}</small>}</label>
+    <label><span>Тип пространства</span><select name="room" defaultValue={concept?.category || params?.get('room') || 'kitchen'}>{Object.entries(roomNames).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
+    <label><span>Что важно учесть</span><textarea name="message" rows={5} placeholder="Примерные размеры, задача хранения, этап ремонта или ссылка на проект." /></label>
+    <label className="fileField"><span>План или фотографии</span><input type="file" disabled /><small>Файлы можно приложить к письму после заполнения основных данных.</small></label>
+    <button className="submitButton" type="submit">Подготовить запрос <span aria-hidden="true">→</span></button>
+    {sent && <div className="formSuccess" role="status"><strong>Основные данные заполнены.</strong><p>В демонстрационной версии запрос не отправляется. Контакт для макета: {siteConfig.email}.</p><p className="demoDisclaimer">Демонстрационный проект — контактные данные вымышлены</p></div>}
+  </form>;
 }
-
-function StartContext({concept}:{concept?:typeof projects[number]}){return <section className="contactSummary" aria-label="С чего можно начать"><p className="eyebrow">{concept?'Выбранный концепт':'С чего можно начать'}</p><h2>{concept?concept.name:'Подготовьте только то, что уже есть'}</h2>{concept&&<p>{concept.solution} · {concept.task}</p>}<ul className="summaryOptionList"><li>примерные размеры комнаты;</li><li>фото помещения или понравившийся концепт;</li><li>список техники и то, что не устраивает в хранении.</li></ul></section>}
-function ConfigSummary({config,low,high}:{config:NonNullable<ReturnType<typeof parse>>;low:number;high:number}){const facade=facades.find(item=>item.id===config.facade)?.name,top=countertops.find(item=>item.id===config.top)?.name,handle=handles.find(item=>item.id===config.handle)?.name,options=selectedOptionLabels(config.options),zones=`Х: ${config.zones.fridge.wall.toUpperCase()}-${config.zones.fridge.module+1} · М: ${config.zones.sink.wall.toUpperCase()}-${config.zones.sink.module+1} · В: ${config.zones.cooktop.wall.toUpperCase()}-${config.zones.cooktop.module+1}`;return <section className="contactSummary" aria-label="Параметры из расчёта"><p className="eyebrow">Черновик из расчёта</p><h2>Параметры уже рядом</h2><dl><div><dt>Планировка</dt><dd>{layoutNames[config.layout]}</dd></div><div><dt>Размеры</dt><dd>{dimensionSummary(config)}</dd></div><div><dt>Зоны</dt><dd>{zones}</dd></div><div><dt>Фасад</dt><dd>{facade}</dd></div><div><dt>Столешница</dt><dd>{top}</dd></div><div><dt>Ручка</dt><dd>{handle}</dd></div><div><dt>Комплектация</dt><dd>{options.length?<ul className="summaryOptionList">{options.map(option=><li key={option}>{option}</li>)}</ul>:'без дополнительных позиций'}</dd></div><div><dt>Ориентир</dt><dd>{budgetRange(low,high)}</dd></div></dl><Link className="textButton" href={`/calculator?${paramsFor(config)}`}>Вернуться к расчёту</Link></section>}
-function paramsFor(config:NonNullable<ReturnType<typeof parse>>){return serialize(config)}
-function budgetRange(low:number,high:number){return `${formatBudget(low)}–${formatBudget(high)}`}function formatBudget(value:number){return value>=1_000_000?`${(value/1_000_000).toFixed(1).replace('.',',')}\u00a0млн\u00a0₽`:`${Math.round(value/1_000)}\u00a0тыс.\u00a0₽`}

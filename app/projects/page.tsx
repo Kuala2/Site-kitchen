@@ -1,8 +1,14 @@
-import type {Metadata} from 'next';
-import {Suspense} from 'react';
-import {ProjectGrid} from '@/components/ProjectGrid';
-import {InteriorHero} from '@/components/InteriorHero';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { ProjectGrid } from '@/components/ProjectGrid';
+import { ActionLink } from '@/components/DesignSystem';
 
-export const metadata:Metadata={title:'Концепты мебели для разных комнат',description:'Девять демонстрационных концептов кухонь, гардеробных, гостиных и рабочих зон.',alternates:{canonical:'/projects/'}};
+export const metadata: Metadata = { title: 'Проекты', description: 'Каталог кухонь, гардеробных и встроенных мебельных систем.', alternates: { canonical: '/projects/' } };
 
-export default function Projects(){return <div className="page immersivePage projectsPage"><InteriorHero image="/images/room-living-wide.jpg" alt="Общая комната с протяжённой встроенной системой хранения" eyebrow="Комнаты и типы решений" title="Мебель, которая становится частью комнаты" lead="Девять разных сценариев: от кухни и гардеробной до гостиной и рабочей ниши. Каждый начинается с пространства, а не с готового гарнитура." note="09 концептов · 06 направлений" position="center 55%"/><section className="projectArchive section"><div className="archiveIntro"><p className="eyebrow">Каталог концептов</p><h2>Смотрите не фасад, а всю композицию</h2><p>Фотографии задают характер, схема объясняет геометрию, а подписи фиксируют конкретную задачу хранения. Все проекты остаются демонстрационными концептами.</p></div><Suspense><ProjectGrid/></Suspense></section></div>}
+export default function Projects() {
+  return <article className="raProjects">
+    <header className="raArchiveHead raFrame"><div><span>Архив решений</span><h1>Проекты для конкретного пространства.</h1></div><p>Выберите тип помещения и откройте кейс: внутри — задача, геометрия, материалы, хранение и узлы.</p></header>
+    <section className="raArchive raFrame"><Suspense fallback={<p>Загружаем проекты…</p>}><ProjectGrid /></Suspense></section>
+    <section className="raArchitectInvite raFrame"><div><span>Для архитекторов и дизайнеров</span><h2>Работаем от чертежа и авторской идеи.</h2></div><div><p>Пришлите план, развёртки и спецификацию. На первом разговоре определим вопросы, которые влияют на производство и монтаж.</p><ActionLink href="/contacts/?room=office" variant="line">Отправить проект</ActionLink></div></section>
+  </article>;
+}

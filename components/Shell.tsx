@@ -1,48 +1,136 @@
 'use client';
 
 import Link from 'next/link';
-import {useEffect,useRef,useState} from 'react';
-import {usePathname} from 'next/navigation';
-import {demoNote,siteConfig} from '@/data/site';
+import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { siteConfig } from '@/data/site';
+import { Arrow } from './DesignSystem';
 
-const links=[['/projects/','Проекты'],['/materials/','Материалы'],['/about/','Как начинается проект'],['/calculator/','Расчёт кухни']];
+const links = [
+  ['/projects/', 'Проекты'],
+  ['/materials/', 'Материалы'],
+  ['/about/', 'Процесс'],
+  ['/calculator/', 'Стоимость'],
+  ['/contacts/', 'Контакты'],
+] as const;
 
-export function Header(){
-  const [open,setOpen]=useState(false);
-  const [scrolled,setScrolled]=useState(false);
-  const pathname=usePathname();
-  const isHome=pathname==='/';
-  const menuButton=useRef<HTMLButtonElement>(null);
-  const navigation=useRef<HTMLElement>(null);
-  const close=()=>setOpen(false);
+export function Header() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const button = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLElement>(null);
+  const isHome = pathname === '/';
 
-  useEffect(()=>{
-    const update=()=>setScrolled(window.scrollY>48);
-    update();window.addEventListener('scroll',update,{passive:true});
-    return()=>window.removeEventListener('scroll',update);
-  },[]);
-
-  useEffect(()=>{
-    if(!open)return;
-    const previousOverflow=document.body.style.overflow;
-    document.body.style.overflow='hidden';
-    const onKeyDown=(event:KeyboardEvent)=>{
-      if(event.key==='Escape'){event.preventDefault();close();menuButton.current?.focus();return;}
-      if(event.key!=='Tab')return;
-      const focusable=navigation.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled])');
-      if(!focusable?.length)return;
-      const first=focusable[0],last=focusable[focusable.length-1];
-      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
-      if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!isHome) {
+      setScrolled(false);
+      return;
+    }
+    const updateHeader = () => setScrolled(window.scrollY > 16);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    return () => window.removeEventListener('scroll', updateHeader);
+  }, [isHome]);
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => panel.current?.querySelector<HTMLElement>('a')?.focus());
+    const keydown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        button.current?.focus();
+      }
+      if (event.key !== 'Tab') return;
+      const panelItems = [...(panel.current?.querySelectorAll<HTMLElement>('a,button') || [])];
+      const items = button.current ? [...panelItems, button.current] : panelItems;
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener('keydown',onKeyDown);
-    requestAnimationFrame(()=>navigation.current?.querySelector<HTMLElement>('a[href]')?.focus());
-    return()=>{document.body.style.overflow=previousOverflow;window.removeEventListener('keydown',onKeyDown)};
-  },[open]);
+    window.addEventListener('keydown', keydown);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', keydown);
+    };
+  }, [open]);
 
-  const active=(href:string)=>href==='/projects/'?pathname==='/projects'||pathname.startsWith('/projects/'):pathname===href.slice(0,-1);
-  const classes=['header',isHome?'header--home':'',scrolled?'header--scrolled':'',open?'header--menu-open':''].filter(Boolean).join(' ');
-  return <header className={classes}><Link className="logo" href="/" aria-label="СЛОЙ 52 — главная">СЛОЙ <b>52</b></Link><div className="headerActions"><Link className="headerContact" href="/contacts/">Обсудить</Link><button ref={menuButton} className="menuBtn" aria-expanded={open} aria-controls="nav" onClick={()=>setOpen(value=>!value)}>{open?'Закрыть':'Меню'}</button></div><nav ref={navigation} id="nav" className={open?'nav open':'nav'} aria-label="Основная навигация">{links.map(([href,label])=><Link key={href} href={href} aria-current={active(href)?'page':undefined} onClick={close}>{label}</Link>)}<Link className="button small" href="/contacts/" aria-current={pathname==='/contacts'?'page':undefined} onClick={close}>Обсудить проект</Link></nav></header>;
+  const active = (href: string) => {
+    const section = href.replace(/^\//, '').replace(/\/$/, '');
+    const current = (pathname || '/').replace(/^\//, '').split('/')[0];
+    return current === section;
+  };
+
+  return (
+    <header className={`siteHeader${isHome ? ' siteHeader--home' : ''}${scrolled ? ' siteHeader--scrolled' : ''}${open ? ' siteHeader--open' : ''}`}>
+      <Link className="brand" href="/" aria-label="СЛОЙ 52 — главная">
+        <b>СЛОЙ 52</b>
+        <span>Ателье мебели · Нижний Новгород</span>
+      </Link>
+      <nav ref={panel} className="mainNav" aria-label="Основная навигация" id="main-nav">
+        {links.map(([href, label]) => (
+          <Link key={href} href={href} aria-current={active(href) ? 'page' : undefined}>
+            {label}
+          </Link>
+        ))}
+        <Link className="mobileProjectLink" href="/contacts/">Обсудить проект <Arrow /></Link>
+      </nav>
+      <Link className="headerAction" href="/contacts/">
+        <span>Обсудить проект</span><Arrow />
+      </Link>
+      <button
+        ref={button}
+        className="menuButton"
+        type="button"
+        aria-expanded={open}
+        aria-controls="main-nav"
+        onClick={() => setOpen((value) => !value)}
+      >
+        {open ? 'Закрыть' : 'Меню'}
+      </button>
+    </header>
+  );
 }
 
-export function Footer(){return <footer><div><Link className="logo inverse" href="/">СЛОЙ <b>52</b></Link><p>{siteConfig.region}</p><p className="footerAuthor">Концепция и разработка · George</p></div><nav aria-label="Навигация в подвале">{links.map(([href,label])=><Link key={href} href={href}>{label}</Link>)}<Link href="/contacts/">Контакты</Link></nav><p className="demoFooter">{demoNote}<br/>Изображения — лицензированные референсы, параметры и проекты — демонстрационные. Реальному производителю понадобятся собственные проекты, материалы, контакты и производственные данные.</p></footer>}
+export function Footer() {
+  return (
+    <footer className="siteFooter">
+      <div className="footerLead">
+        <Link className="brand brand--light" href="/">
+          <b>СЛОЙ 52</b><span>Ателье мебели · Нижний Новгород</span>
+        </Link>
+        <h2>Мебель как часть архитектуры.</h2>
+      </div>
+      <div className="footerGrid">
+        <div>
+          <p className="footerLabel">Навигация</p>
+          {links.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}
+        </div>
+        <div>
+          <p className="footerLabel">Связь</p>
+          <p>{siteConfig.phoneDisplay}</p>
+          <p>{siteConfig.email}</p>
+          <p>{siteConfig.region}</p>
+          <p className="demoDisclaimer">Демонстрационный проект — контактные данные вымышлены</p>
+        </div>
+        <div>
+          <p className="footerLabel">О проекте</p>
+          <p>{siteConfig.description}</p>
+        </div>
+      </div>
+      <div className="footerBottom">
+        <span>© 2026 СЛОЙ 52</span>
+        <span>Нижний Новгород · проектирование, производство и монтаж</span>
+      </div>
+    </footer>
+  );
+}
